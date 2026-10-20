@@ -1,0 +1,162 @@
+WATTWISE MVP HARDWARE COMPARISON
+Smart plugs and whole-house clamp-based energy monitors
+Prepared: 20 October 2026
+
+PURPOSE
+This comparison uses the uploaded WattWise MVP scope as the source of truth. The MVP now requires BOTH:
+1. One clamp-based energy monitor measuring the complete household supply, installed by a qualified electrician.
+2. One compatible smart-plug model monitoring 2-3 selected appliances.
+
+A smart plug cannot replace the whole-house monitor. The whole-house meter already includes the appliances measured by the plugs, so do not add plug totals to household totals. For matching periods, the plugs can be subtracted from the household total to calculate a clearly labelled remainder.
+
+============================================================
+A. SMART PLUG OPTIONS (2-3 APPLIANCES)
+============================================================
+
+1. TP-Link Tapo P110M
+
+Pros against the MVP:
+- Energy-monitoring plug and suitable in principle for the required 2-3 selected appliances.
+- TP-Link Türkiye lists a maximum rating of 16 A / 3,680 W for general/resistive loads.
+- Matter 1.3 energy reporting is available after a compatible firmware update. TP-Link identifies Home Assistant and SmartThings as currently verified platforms for Matter energy monitoring.
+- Familiar consumer setup through the Tapo app; sold in Türkiye.
+
+Cons / risks against the MVP:
+- It only measures the appliance connected to that plug. It does not satisfy the required whole-house monitoring feature.
+- The TP-Link material reviewed does not document a supported direct API for a custom WattWise backend. A practical route is likely P110M -> Matter/Home Assistant -> WattWise, which adds another component to configure and maintain.
+- Matter energy data support is platform- and firmware-dependent. Confirm the exact EU/Türkiye hardware and firmware version before buying the full set.
+- The 16 A / 3,680 W rating is stated for general/resistive loads. Check the appliance and plug ratings; do not treat this as approval for every motor or high-load appliance.
+
+MVP fit: Acceptable if the team is willing to use Home Assistant or another tested bridge and proves energy readings reach WattWise. Higher integration uncertainty for a custom backend than Shelly.
+
+2. Shelly Plug M Gen3
+
+Pros against the MVP:
+- Measures an individual appliance and therefore fits the 2-3 smart-plug part of the scope.
+- Shelly documents a local RPC/HTTP API and MQTT support, which gives the backend team a direct local integration route.
+- Local-network collection can work without making the plug itself publicly reachable from the Internet.
+- Shelly lists a 13 A / 3,000 W maximum load for this model.
+
+Cons / risks against the MVP:
+- It does not measure the whole household supply.
+- Its 13 A / 3,000 W rating is lower than the Tapo P110M rating. Check the appliance's rated load and the exact EU plug variant.
+- A cloud-hosted backend still cannot normally poll a device on a private home LAN directly. For the MVP demo, run the backend locally on the same network; for cloud hosting, use a local collector that sends readings outbound to the backend.
+
+MVP fit: Recommended first choice for the appliance plugs if direct integration and reducing custom-backend uncertainty matter most. Buy one first, validate it, then standardize on that same model for the other appliances.
+
+SMART-PLUG RECOMMENDATION
+For WattWise, prefer Shelly Plug M Gen3 for the 2-3 appliance measurements because its documented local API/MQTT path aligns with Umut's IoT integration role. Tapo P110M remains a viable lower-friction consumer option if the team accepts Home Assistant/Matter as an integration bridge and validates the exact regional firmware first.
+
+============================================================
+B. WHOLE-HOUSEHOLD CLAMP ENERGY-MONITOR OPTIONS
+============================================================
+
+Important distinction:
+A handheld clamp ammeter normally gives a spot current reading in amperes. That alone is not a reliable source for daily household kWh or the MVP's timestamped household history. The project needs a powered energy-monitoring device with current-transformer (CT) clamps that reports active power and accumulated active energy (kWh), plus timestamps or data that the backend can timestamp.
+
+1. Shelly EM Gen3 — single-phase option
+
+Pros:
+- Designed as a single-phase energy meter and uses CT clamps, rather than being a handheld spot-check instrument.
+- Shelly documents active power/energy measurement, local monitoring, MQTT, HTTP/RPC and WebSocket support.
+- A useful lower-complexity choice if the electrician confirms the household is single-phase and the included CT's current rating is sufficient for the main supply.
+
+Cons / risks:
+- The commonly listed set includes a 50 A CT. The electrician must verify the home's main rating, conductor fit, and CT range; do not assume 50 A is sufficient.
+- It is not the right choice for a three-phase supply unless the complete system is measured with suitable phase coverage.
+- Panel wiring and placement must be assessed by a qualified electrician.
+
+MVP fit: Best first option to investigate for a confirmed single-phase household when the 50 A CT rating is appropriate.
+
+2. Shelly Pro EM-50 — single-phase, DIN-rail option
+
+Pros:
+- DIN-rail energy meter for a distribution panel; two measurement channels on the same phase with two 50 A CTs included.
+- Shelly documents active energy accuracy class B, local LAN/Wi-Fi, MQTT/HTTP, and stored one-minute readings.
+- Locally available in Türkiye in current retailer listings.
+
+Cons / risks:
+- Single-phase only and each CT channel is rated to 50 A. The electrician must confirm that its setup/range suits the household supply.
+- More panel-oriented installation and potentially higher cost than is needed for a simple demo.
+- Its relay is for contactor control; the project only needs measurement and should not implement automatic shutoff in the MVP.
+
+MVP fit: A strong single-phase panel option when the electrician prefers a DIN-rail device and confirms the CT rating is suitable.
+
+3. Shelly Pro 3EM 120A — three-phase option
+
+Pros:
+- Designed for three-phase monitoring and includes three 120 A CT clamps, one per phase.
+- Shelly documents phase-level voltage/current/power and accumulated energy, about 1% active-energy measurement accuracy, local LAN/Wi-Fi, MQTT/HTTP/WebSocket, and on-device one-minute history.
+- A good match if the pilot household is three-phase and the main conductors fit the supplied CTs.
+
+Cons / risks:
+- More hardware and installation complexity than a single-phase monitor; probably unnecessary for a confirmed single-phase household.
+- Must be installed in the panel by a qualified electrician, who must confirm phase arrangement, CT orientation/rating, enclosure space and wiring method.
+- Check current local price and the exact model/CT variant before purchase.
+
+MVP fit: Preferred option to investigate for a three-phase household, subject to electrician confirmation.
+
+WHOLE-HOUSE METER RECOMMENDATION
+Do not select the whole-house monitor until the electrician confirms the supply is single- or three-phase, the main breaker/current rating, panel space, conductor accessibility and appropriate CT rating. Then shortlist:
+- Confirmed single-phase, suitable current rating: Shelly EM Gen3 or Shelly Pro EM-50.
+- Confirmed three-phase: Shelly Pro 3EM 120A, if its CTs and installation are appropriate.
+
+All listed Shelly meters offer data-access paths that are more aligned with a custom backend than a standalone handheld meter. The team should still test a real reading-to-database-to-dashboard path before finalizing the model.
+
+============================================================
+C. CALCULATION AND VALIDATION GUIDANCE
+============================================================
+
+- Use active energy in kWh for consumption and tariff-cost calculations. Basic form: estimated energy cost = measured kWh x applicable tariff rate, with other applicable charges handled by the tariff logic.
+- Do not estimate household kWh by multiplying one current (A) reading by nominal voltage and elapsed time. That misses changes over time and may miss power factor/active-power differences.
+- Store raw readings with device ID, measured timestamp, received timestamp, units, and status. Preserve gaps; never convert a disconnection to zero usage.
+- Compare household and appliance totals only over matching intervals. The whole-house meter includes the plugged appliances.
+- If using a handheld clamp meter to cross-check installation, treat it as an electrician's spot-check instrument, not the source of project history or kWh calculations. For validation, compare accumulated kWh over the same time window against the monitor's records or a suitable reference energy meter.
+- Run the collector/backend on the same Wi-Fi network for the end-of-term demo. Keep a clearly labelled recorded-data fallback in case the live Wi-Fi/device fails.
+
+SAFETY AND PURCHASE CHECKLIST
+- Have a qualified electrician inspect the panel and perform the installation. Do not open the distribution panel or install CTs yourself.
+- Confirm the complete household supply is covered, including every phase if three-phase.
+- Confirm CT current rating, conductor size/shape, orientation, and physical fit before purchase.
+- Use one smart-plug model for all 2-3 appliance plugs.
+- Buy/test one plug first. Verify power and kWh readings, firmware/API access, reconnect behavior, duplicate handling and counter resets before buying the remaining units.
+- Do not claim the plug or clamp energy monitor is a utility-billing meter; validate readings and describe measurement limitations.
+
+============================================================
+SOURCES (OFFICIAL PRODUCT / TECHNICAL DOCUMENTATION AND LOCAL LISTINGS)
+============================================================
+
+Tapo P110M Türkiye product page:
+https://www.tp-link.com/tr/home-networking/smart-plug/tapo-p110m/
+
+TP-Link Matter energy-monitoring firmware announcement (P110M; platform support notes):
+https://www.tp-link.com/tr/press/news/21871/
+
+TP-Link P110M firmware notes and compatibility cautions:
+https://www.tp-link.com/us/support/download/tapo-p110m/
+
+Shelly Plug M Gen3 technical API documentation:
+https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen3/ShellyPlugMG3/
+
+Shelly Plug M Gen3 product specifications:
+https://www.shelly.com/products/shelly-plug-m-gen3-white
+
+Shelly EM Gen3 technical documentation:
+https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen3/ShellyEMG3/
+
+Shelly EM Gen3 product page:
+https://www.shelly.com/products/shelly-em-gen3
+
+Shelly Pro EM-50 product page and specifications:
+https://www.shelly.com/products/shelly-pro-em-50
+
+Shelly Pro 3EM product page and specifications:
+https://www.shelly.com/products/shelly-pro-3em-x1
+
+Shelly Pro 3EM local listing in Türkiye:
+https://www.tdhometech.com/shelly-pro-3em-120a-uc-fazli-akilli-enerji-olcer
+
+Shelly Pro EM-50 local listing in Türkiye:
+https://www.koctas.com.tr/shelly-pro-em-50-1-faz-enerji-olcer/p/5002341629
+
+Prices and stock change. Product specifications, the exact regional model and the electrician's site assessment should be rechecked before purchase.
