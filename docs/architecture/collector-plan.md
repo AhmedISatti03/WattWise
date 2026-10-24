@@ -2,6 +2,7 @@
 
 **Status:** Draft for team review; implementation has not started under this plan.  
 **Prepared:** 24 October 2026  
+**Revision:** Dedicated collector hardware for development and pilot operation.  
 **Related tasks:** [#8 — Specify the collector's first implementation](https://github.com/AhmedISatti03/WattWise/issues/8), [#4 — Read and store data from one plug](https://github.com/AhmedISatti03/WattWise/issues/4)  
 **Proposed repository location:** `docs/architecture/collector-plan.md`
 
@@ -37,37 +38,104 @@ Simulated adapters OR real device adapters
 
 Acquisition and delivery run independently. An unavailable backend must not stop collection from reachable devices.
 
-## 3. Where the collector runs
+## 3. Dedicated collector device
 
-### Development
+### Recommended model: Raspberry Pi 4 Model B, 2 GB RAM
 
-Initially run the collector as a local process on a developer's laptop. Simulated adapters require no physical devices. Real-device testing requires a host on the same reachable local network as the selected devices.
+Use this dedicated device from the first simulated development run through the pilot. The laptop remains the coding environment; the collector service runs on the Pi independently of the laptop and its SSH connection.
 
-The development setup needs:
+The Pi 4 provides Gigabit Ethernet, dual-band Wi-Fi, microSD storage, and USB 3 ports. These allow a wired connection to the household router, communication with Wi-Fi devices on the same reachable LAN, and a later USB SSD upgrade. See the [official Pi 4 specifications](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/).
 
-- The runtime selected for the collector, independently of the backend language.
-- A persistent writable directory for SQLite and operational state.
-- Device configuration, a backend URL, and a collector credential supplied outside version control.
-- A working system clock synchronized through the operating system.
-- A local backend or mock ingestion service for early development.
+Our proposed workload is one lightweight service polling up to four devices every 10 seconds, writing a SQLite outbox, and sending HTTPS batches. We expect 2 GB RAM to provide adequate capacity for this workload and SSH administration; this is an engineering estimate, to be checked by the on-device tests below. The Pi will not initially run bill OCR, model training, a desktop, or the production application database.
 
-A laptop is suitable for supervised testing. Collection stops when it sleeps, shuts down, or leaves the home network.
+The choice prioritizes a documented Linux platform, built-in Ethernet, simple maintenance, and enough headroom for development. A 4 GB Pi 4 is an acceptable substitute if its complete local kit costs little more or the 2 GB model is unavailable. Additional RAM is not a current collector requirement.
 
-### Continuous pilot operation
+### Alternatives
 
-Use a dedicated, always-on host in the pilot home, such as an available Raspberry Pi or small computer. The final host and budget remain open decisions; no purchase is needed to write or begin this plan.
+| Device | Fit for WattWise | Trade-off and selection rule |
+|---|---|---|
+| **Raspberry Pi 4 Model B, 2 GB** | Recommended dedicated collector for development and pilot. | Requires power supply, storage, enclosure, and initial setup; validate the complete kit price. |
+| **Raspberry Pi Zero 2 W** | Possible compact alternative for the collector alone. | 512 MB RAM, 2.4 GHz Wi-Fi, and no built-in Ethernet leave less development headroom; wired networking needs USB accessories. Choose only if its complete kit saves enough to justify these constraints. |
+| **Raspberry Pi 5, 2 GB or 4 GB** | Good alternative if already available or local kit pricing is close. | More processing capacity than this collector currently needs. Budget for its recommended 27 W supply and a compatible cooling case; useful if additional local services are planned later. |
+| **Existing small x86 computer / thin client with at least 4 GB RAM and SSD** | Sensible reuse option if the team already owns one. | Check the exact unit's Linux support, Ethernet, included supply, storage health, physical size, and measured power use. No particular used model is assumed available. |
 
-The pilot host must:
+The [Zero 2 W specifications](https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/) and [Pi 5 specifications](https://www.raspberrypi.com/products/raspberry-pi-5/) support the hardware distinctions above. Cost effectiveness depends on actual local quotes. Do not compare board-only prices with complete computer kits. No Turkish stock, price, or measured power-consumption claim is made here.
 
-- Remain powered and connected to the device network when team laptops are off.
-- Start the collector automatically after boot and restart it after a crash.
-- Keep the outbox on persistent storage across restarts and updates.
-- Have outbound HTTPS access to the hosted backend; devices do not need public inbound access.
-- Provide logs, disk-usage monitoring, and a way for the team to inspect failures.
+A microcontroller such as an ESP32 would require a different firmware and storage approach. It is not a direct substitute for the proposed Linux, SQLite, and supervised-service implementation.
 
-Prefer wired networking for the host where practical. Configure a supervised service after choosing its operating system. Containers are optional; they must use persistent storage if adopted.
+### Required accessories and purchase list
 
-Power loss can stop both collection and network access. Automatic restart reduces downtime but does not recover measurements that were never acquired.
+| Item | Proposed specification | Purpose |
+|---|---|---|
+| Collector board | Raspberry Pi 4 Model B, 2 GB RAM | Runs the collector continuously. |
+| Power supply | Official Raspberry Pi 15 W USB-C supply, with plug suitable for Türkiye | Stable board power. Raspberry Pi recommends the 3 A USB-C supply for Pi 4; do not assume any phone charger is equivalent. |
+| Boot and data storage | Genuine 64 GB high-endurance microSD, Class 10 / U1 or better | OS, application, SQLite outbox, and bounded logs. Capacity does not replace write endurance or backups. |
+| Enclosure and cooling | Pi 4-compatible ventilated case with fitted heatsink; add a compatible fan if temperature testing requires it | Physical protection and heat management. Confirm model compatibility before purchase. |
+| Network cable | Cat5e or Cat6 Ethernet patch cable of suitable length | Preferred connection to the router. Built-in Wi-Fi is a fallback. |
+| Card reader | USB microSD reader, if the laptop has no compatible reader | Initial OS installation and recovery. Shared setup equipment, not permanently attached. |
+| Network access | Router with a spare LAN port and internet access | Local device access and outbound backend delivery; existing household equipment can be used. |
+
+The supply recommendation follows [Raspberry Pi's power guidance](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#power-supply). Check the final basket for duplicated accessories already included in a kit.
+
+Optional later additions:
+
+- A USB SSD and compatible USB 3 adapter if write volume, retention, or endurance tests justify moving persistent data off microSD. Verify power requirements and boot/data configuration.
+- A spare imaged microSD for recovery. Back up configuration separately; do not clone or commit live credentials into shared images.
+- A compatible UPS with supported shutdown behavior, plus router backup power if network continuity is required. A generic power bank is not assumed to provide safe uninterrupted pass-through operation.
+- A supported RTC module if trustworthy timestamps are required after power loss while internet time synchronization is unavailable. Initially flag unsynchronized clock data rather than treating its times as trustworthy.
+
+No monitor, keyboard, camera, GPIO sensor, CT interface board, or HDMI cable is needed for normal headless use. The Pi reads the monitoring devices over the LAN; CT clamps connect to their intended energy monitor, not directly to Pi GPIO.
+
+### Operating system and software
+
+Propose Raspberry Pi OS Lite, 64-bit, with a Python collector in a virtual environment, SQLite, and a systemd service. Python is a collector-specific recommendation; it does not decide the backend language. Pin dependencies and verify ARM64 compatibility on the device. A desktop, Docker, Home Assistant, and an MQTT broker are not required for the first HTTP/RPC implementation.
+
+Install the OS using Raspberry Pi Imager and preconfigure hostname `wattwise-collector`, a named administrator, SSH public-key access, locale, and networking. Raspberry Pi documents this [headless setup](https://www.raspberrypi.com/documentation/computers/getting-started.html) and [SSH administration](https://www.raspberrypi.com/documentation/computers/remote-access.html).
+
+Proposed on-device paths:
+
+```text
+/opt/wattwise-collector/releases/   # Versioned application deployments
+/opt/wattwise-collector/current/    # Active release
+/etc/wattwise-collector/           # Device config and restricted credentials
+/var/lib/wattwise-collector/       # SQLite outbox and persistent device state
+systemd journal                   # Bounded operational logs
+```
+
+Run the service as a dedicated non-root account with write access to its state directory. Enable startup on boot and restart after failure with a delay. Log queue depth, last poll/upload, failures, disk usage, CPU temperature, and memory usage without logging credentials. Configure journal retention and monitor the SQLite database plus its WAL files against the storage budget.
+
+Use Ethernet to the router where possible. The Pi and Wi-Fi plugs need network reachability, not the same radio connection; guest-network isolation can prevent access. Reserve addresses through router DHCP and map devices to stable registered identities. Avoid exposing SSH or device APIs through public port forwarding.
+
+### Laptop-to-device development workflow
+
+1. Write and review code on the laptop and commit it to a development branch.
+2. Deploy a known commit to a new release directory on the Pi using SSH and Git, or transfer the release with SCP/rsync.
+3. Install pinned dependencies into that release's virtual environment and run a configuration check.
+4. Stop the service for any required state migration, preserve its database and credentials, switch the active release, and restart it.
+5. Inspect service logs and confirm a new event reaches backend storage. Record the deployed commit for reproducibility.
+6. Roll back to the previous release if needed; database migrations must be compatible with rollback or have a documented recovery procedure.
+
+Do not run a second collector process manually against the same devices and state database while the service is active. Closing the SSH terminal or switching off the laptop must not stop the service.
+
+### Simulated readings first, on the Pi
+
+Run the simulated adapters, normalizer, outbox, and uploader on the Pi from day one. Prefer an independently hosted development backend. Until that is ready, a small ingestion stub may also run as a separate service on the Pi for delivery-contract testing; it is not a production backend or independent off-device durability test.
+
+An endpoint on the laptop can help debugging, but the laptop-off acceptance run must use the hosted backend or on-Pi stub. During a deliberate backend outage the collector should keep generating and buffering sample readings.
+
+After simulation checks pass, change adapter configuration to connect one physical Shelly plug under #4. Preserve the outbox/delivery flow. Register physical devices separately from simulated identities and retain separate sample datasets. Add the household monitor after selection and installation, then expand to 2–3 appliance plugs.
+
+### Dedicated-device acceptance checks
+
+- Run four simulated sources for at least 24 hours with the intended polling/upload schedule; record event counts, timestamp coverage, CPU/RAM use, temperature, disk growth, queue depth, and errors.
+- Switch off the laptop for part of the run and verify the Pi continues collecting and sending readings independently.
+- Stop the backend or deny its connection while leaving the LAN available; confirm local buffering, then restore access and verify the queue drains without duplicate stored events.
+- Disconnect the Pi's network separately; confirm simulation still runs locally, then verify recovery after reconnection. With real devices, this also creates acquisition gaps that cannot be filled by invented readings.
+- Reboot cleanly and terminate the service process in separate checks; verify automatic restart, persisted state, and duplicate-safe recovery.
+- Observe thermal throttling or undervoltage indicators; correct power or cooling problems before the pilot. Do not infer actual wattage from the supply's rated maximum output.
+- Keep the existing failure scenarios in section 9, including simulated storage exhaustion. Do not fill the OS disk or deliberately cut power as the routine restart test.
+
+The initial 24-hour run is a readiness check, not proof of long-term reliability. Power loss, storage failure, and host failure remain data-loss risks. The Pi and router need separate power protection if uninterrupted operation is required.
 
 ## 4. Reading devices and collection frequency
 
@@ -239,15 +307,15 @@ Simulation validates software behavior. It does not establish physical-device ac
 ## 10. Initial implementation steps
 
 1. Agree the adapter interface, event schema, registration rules, and batch acknowledgment contract with the backend work.
-2. Select a collector runtime and create a small runnable process with configuration validation. Keep the protocol independent of the backend language.
-3. Add simulated adapters and a simple ingestion stub to exercise the full flow immediately.
+2. Obtain and configure the proposed Pi 4 kit, Raspberry Pi OS Lite, Python environment, persistent state directory, and supervised service. Keep the protocol independent of the backend language.
+3. Deploy simulated adapters to the Pi and connect to the development backend or an independently supervised on-Pi ingestion stub. Use the laptop for coding and deployment.
 4. Implement the SQLite outbox and persistent counter state before relying on network delivery.
 5. Implement authenticated batch ingestion, database uniqueness, and per-event outcomes in the backend; replace the stub.
 6. Add device status, heartbeat reporting, retry behavior, and bounded storage handling.
 7. Run the failure scenarios above and record results for review.
 8. Under #4, add the selected plug's physical adapter and prove a real reading can be stored and retrieved. Check units and counter behavior against the device's own records.
 9. Add the remaining appliance devices and selected whole-house monitor after validation and installation.
-10. Move the collector to the continuous pilot host, configure startup/restart behavior, and verify operation while team laptops are off.
+10. Keep the same dedicated collector platform for the pilot; move it to the pilot LAN if needed, validate real-device reachability, and repeat recovery and laptop-off checks.
 
 These steps can become separate board tasks with one main owner and explicit acceptance criteria. #8 delivers the reviewed plan; working implementation remains separate.
 
@@ -255,8 +323,9 @@ These steps can become separate board tasks with one main owner and explicit acc
 
 | Decision | Proposed direction / evidence needed |
 |---|---|
-| Collector runtime | Choose based on maintainability and device integration; backend language does not need to match. |
-| Continuous host | Confirm available hardware, operating system, power, storage, and budget. |
+| Collector runtime | Propose Python in a virtual environment; confirm pinned dependencies on ARM64. Backend language remains independent. |
+| Dedicated host | Recommend Pi 4 Model B, 2 GB, for development and pilot. Confirm complete local kit cost and availability before purchase. |
+| Storage and cooling accessories | Start with the specified high-endurance microSD and ventilated heatsink case; validate temperature, write growth, and whether a fan or SSD is justified. |
 | Exact devices | Prioritize Shelly integration; validate model/firmware and household supply coverage before purchase. |
 | Device interfaces | Confirm RPC calls, field semantics, authentication, timestamps, and counter persistence on actual hardware. |
 | Backend contract | Agree endpoint, payload limits, credentials, registration, and partial-batch responses. |
@@ -271,7 +340,8 @@ These steps can become separate board tasks with one main owner and explicit acc
 - [ ] Ahmed confirms energy semantics, counter handling, scopes, and gap treatment.
 - [ ] Miray confirms device and collector status fields support understandable interface states.
 - [ ] Collection-to-backend flow and duplicate handling are clear enough to implement.
-- [ ] Continuous operation is distinguished from laptop development.
+- [ ] Dedicated model, accessories, and selection reasons are reviewed; laptop coding is distinguished from on-device collector execution.
+- [ ] On-device simulation and laptop-off acceptance checks are specified.
 - [ ] Buffering, outage limits, restarts, and unrecoverable measurement gaps are explicit.
 - [ ] Simulated development follows the real ingestion path and remains visibly labelled.
 - [ ] Implementation steps and unresolved decisions are recorded.
