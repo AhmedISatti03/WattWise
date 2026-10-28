@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "sample": true,
+    "sampleLabel": "Sample data — not real household measurements",
+    "householdId": "sample-household",
+    "timezone": "Europe/Istanbul",
+    "generatedAt": "2026-10-28T14:30:00+03:00"
+  },
+  "billingCycle": {
+    "start": "2026-10-18T00:00:00+03:00",
+    "endExclusive": "2026-11-17T00:00:00+03:00",
+    "lastIncludedDate": "2026-11-16"
+  },
+  "currentPower": {
+    "value": 820,
+    "unit": "W",
+    "classification": "measured",
+    "observedAt": "2026-10-28T14:30:00+03:00",
+    "status": "ok"
+  },
+  "todayEnergy": {
+    "value": 8.4,
+    "unit": "kWh",
+    "classification": "measured",
+    "period": {
+      "start": "2026-10-28T00:00:00+03:00",
+      "end": "2026-10-28T14:30:00+03:00"
+    },
+    "partialDay": true
+  },
+  "contributions": {
+    "period": {
+      "start": "2026-10-27T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": 12.0,
+      "unit": "kWh",
+      "classification": "measured"
+    },
+    "appliances": [
+      {
+        "deviceId": "plug-ac",
+        "name": "AC",
+        "value": 4.0,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok"
+      },
+      {
+        "deviceId": "plug-fridge",
+        "name": "Fridge",
+        "value": null,
+        "unit": "kWh",
+        "classification": "unavailable",
+        "status": "stale",
+        "unavailableReason": "incomplete_interval"
+      },
+      {
+        "deviceId": "plug-dishwasher",
+        "name": "Dishwasher",
+        "value": 2.0,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok"
+      }
+    ],
+    "other": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "unavailableReason": "period_mismatch"
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "household-monitor",
+      "name": "Whole-household monitor",
+      "scope": "household",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00"
+    },
+    {
+      "deviceId": "plug-ac",
+      "name": "AC",
+      "scope": "appliance",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00"
+    },
+    {
+      "deviceId": "plug-fridge",
+      "name": "Fridge",
+      "scope": "appliance",
+      "status": "stale",
+      "lastReadingAt": "2026-10-28T14:20:00+03:00"
+    },
+    {
+      "deviceId": "plug-dishwasher",
+      "name": "Dishwasher",
+      "scope": "appliance",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00"
+    }
+  ]
+}

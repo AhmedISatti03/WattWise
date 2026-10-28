@@ -1,0 +1,12 @@
+{
+  "error": {
+    "code": "service_unavailable",
+    "message": "Could not refresh dashboard data.",
+    "retryable": true
+  },
+  "meta": {
+    "sample": true,
+    "sampleLabel": "Sample data — not real household measurements",
+    "generatedAt": "2026-10-28T14:30:00+03:00"
+  }
+}

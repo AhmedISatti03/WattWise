@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "sample": true,
+    "sampleLabel": "Sample data — not real household measurements",
+    "householdId": "sample-household",
+    "timezone": "Europe/Istanbul",
+    "generatedAt": "2026-10-28T14:30:00+03:00"
+  },
+  "billingCycle": {
+    "start": "2026-10-18T00:00:00+03:00",
+    "endExclusive": "2026-11-17T00:00:00+03:00",
+    "lastIncludedDate": "2026-11-16"
+  },
+  "currentPower": {
+    "value": null,
+    "unit": "W",
+    "classification": "unavailable",
+    "observedAt": null,
+    "status": "no_readings",
+    "unavailableReason": "no_readings"
+  },
+  "todayEnergy": {
+    "value": null,
+    "unit": "kWh",
+    "classification": "unavailable",
+    "period": {
+      "start": "2026-10-28T00:00:00+03:00",
+      "end": "2026-10-28T14:30:00+03:00"
+    },
+    "partialDay": true,
+    "unavailableReason": "no_readings"
+  },
+  "contributions": {
+    "period": {
+      "start": "2026-10-27T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "unavailableReason": "no_readings"
+    },
+    "appliances": [],
+    "other": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "unavailableReason": "no_readings"
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "household-monitor",
+      "name": "Whole-household monitor",
+      "scope": "household",
+      "status": "awaiting_first_reading",
+      "lastReadingAt": null
+    }
+  ]
+}
