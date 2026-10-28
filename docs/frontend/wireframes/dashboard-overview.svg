@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1340" viewBox="0 0 1500 1340" role="img" aria-labelledby="title desc">
+<title id="title">WattWise desktop and phone dashboard wireframes</title>
+<desc id="desc">Low fidelity sample dashboards showing household measurements, dated forecast, budget warning, and appliance contributions already included in household totals.</desc>
+<defs><style>
+text{font-family:Arial,sans-serif;fill:#25323c;font-size:16px}.h{font-size:25px;font-weight:700}.s{font-size:13px;fill:#52616d}.n{font-size:30px;font-weight:700}.label{font-size:14px;font-weight:700}.card{fill:#fff;stroke:#b7c2ca;stroke-width:1.3}.line{stroke:#bdc7ce;stroke-width:1}.accent{fill:#f1f5f7;stroke:#b7c2ca}.warn{fill:#fff5df;stroke:#c9ac69}
+</style></defs>
+<rect width="1500" height="1340" fill="#e8edf0"/>
+<text x="42" y="45" class="h">WattWise / Task #5</text>
+<text x="42" y="74">Dashboard wireframes · Review draft · 28 October 2026</text>
+<text x="42" y="103" class="s">Illustrative content hierarchy, not final visual design. All figures use synthetic sample data.</text>
+<text x="42" y="144" class="label">DESKTOP</text>
+<rect x="42" y="165" width="950" height="1055" rx="8" class="card"/>
+<path d="M42 229H992M208 229V1220" class="line"/>
+<text x="63" y="203" class="h">WattWise</text>
+<text x="240" y="199">My home · 18 Oct–16 Nov 2026</text><text x="880" y="199" class="s">Settings</text>
+<rect x="55" y="250" width="138" height="40" rx="4" fill="#dce7e4"/>
+<text x="68" y="275">Dashboard</text><text x="68" y="329">Usage</text><text x="68" y="381">Bills</text><text x="68" y="433">Devices</text><text x="68" y="485">Settings</text>
+<rect x="232" y="249" width="736" height="48" rx="4" class="warn"/>
+<text x="247" y="278" class="label">SAMPLE DATA — not real household measurements</text>
+<text x="233" y="326" class="s">Snapshot: 28 Oct, 14:30 · Europe/Istanbul</text>
+<rect x="232" y="345" width="356" height="125" rx="5" class="card"/>
+<rect x="608" y="345" width="360" height="125" rx="5" class="card"/>
+<text x="249" y="375">Current household power</text><text x="249" y="419" class="n">820 W</text><text x="249" y="448" class="s">Measured · reading 14:30</text>
+<text x="626" y="375">Today's household energy</text><text x="626" y="419" class="n">8.40 kWh</text><text x="626" y="448" class="s">Today — partial day · 00:00–14:30</text>
+<rect x="232" y="490" width="736" height="253" rx="5" class="card"/>
+<text x="249" y="522" class="label">YOUR BILLING CYCLE / ESTIMATES</text>
+<text x="249" y="555">Energy cost so far</text><text x="249" y="590" class="n">₺325.20</text><text x="249" y="616" class="s">Through 14:30</text>
+<text x="615" y="555">Full-cycle energy-cost forecast</text><text x="615" y="590" class="n">₺900.00</text><text x="615" y="616" class="s">Early estimate · calculated 28 Oct, 00:00</text>
+<rect x="249" y="632" width="700" height="56" rx="4" class="warn"/>
+<text x="262" y="655" class="label">Forecast to go over budget by ₺100.00</text><text x="262" y="677" class="s">Same-cycle target ₺800.00 · View usage / Edit budget</text>
+<text x="249" y="714" class="s">Fictional flat tariff; energy charges only. Basis and limitations →</text>
+<rect x="232" y="763" width="736" height="152" rx="5" class="card"/>
+<text x="249" y="794" class="label">HOUSEHOLD TREND</text><text x="806" y="794" class="s">Daily / Weekly</text>
+<rect x="249" y="811" width="700" height="57" fill="#f1f5f7" stroke="#bdc7ce" stroke-dasharray="5 5"/>
+<text x="270" y="844" class="s">Chart area · labelled dates, visible gaps, partial current day</text><text x="249" y="894" class="s">Show data table →</text>
+<rect x="232" y="935" width="736" height="159" rx="5" class="card"/>
+<text x="249" y="964" class="label">CONTRIBUTIONS / YESTERDAY, 27 OCT / COMPLETE DAY</text>
+<text x="249" y="995">Household total: 12.00 kWh</text>
+<text x="249" y="1026">AC 4.00 · Fridge 1.00 · Dishwasher 2.00 · Other 5.00 kWh</text>
+<text x="249" y="1054" class="s">Appliances are included in total. Other = calculated remainder.</text><text x="249" y="1077" class="s">Inspect consumption →</text>
+<rect x="232" y="1114" width="736" height="84" rx="5" class="card"/>
+<text x="249" y="1143" class="label">RECOMMENDATIONS</text><text x="249" y="1168" class="s">AC: largest monitored contributor yesterday, 4 of 12 kWh ≈ 33%.</text><text x="249" y="1188" class="s">See supporting data and suggestion →</text>
+<text x="1030" y="144" class="label">PHONE / STACKED CONTENT</text>
+<rect x="1030" y="165" width="428" height="1114" rx="22" fill="#fff" stroke="#8c9ba6" stroke-width="2"/>
+<text x="1053" y="202" class="h">WattWise</text><text x="1363" y="201" class="s">Settings</text>
+<text x="1053" y="231">My home · 18 Oct–16 Nov</text>
+<rect x="1048" y="247" width="392" height="48" rx="4" class="warn"/>
+<text x="1060" y="269" class="label">SAMPLE DATA</text><text x="1060" y="286" class="s">Not real household measurements</text>
+<text x="1053" y="322" class="s">28 Oct, 14:30 · Europe/Istanbul</text>
+<rect x="1048" y="339" width="392" height="171" rx="5" class="card"/>
+<text x="1063" y="367">Current household power</text><text x="1063" y="401" class="n">820 W</text><text x="1190" y="400" class="s">Measured 14:30</text>
+<text x="1063" y="438">Today's household energy</text><text x="1063" y="472" class="n">8.40 kWh</text><text x="1063" y="495" class="s">Today — partial day</text>
+<rect x="1048" y="528" width="392" height="292" rx="5" class="card"/>
+<text x="1063" y="556" class="label">YOUR BILLING CYCLE</text>
+<text x="1063" y="587">Energy cost so far: ₺325.20</text><text x="1063" y="608" class="s">Through 14:30</text>
+<text x="1063" y="640">Forecast energy cost: ₺900.00</text><text x="1063" y="662" class="s">Early estimate · calculated 00:00</text>
+<text x="1063" y="693">Budget: ₺800.00</text>
+<rect x="1061" y="708" width="366" height="54" rx="4" class="warn"/>
+<text x="1072" y="731" class="label">Forecast to go over by ₺100.00</text><text x="1072" y="750" class="s">View usage / Edit budget</text>
+<text x="1063" y="787" class="s">Sample tariff; energy charges only.</text><text x="1063" y="807" class="s">Basis and limitations →</text>
+<rect x="1048" y="838" width="392" height="102" rx="5" class="card"/>
+<text x="1063" y="866" class="label">HOUSEHOLD TREND</text><text x="1063" y="893" class="s">Chart with dates, gaps and partial labels</text><text x="1063" y="920" class="s">Daily / Weekly · Show data table</text>
+<rect x="1048" y="958" width="392" height="162" rx="5" class="card"/>
+<text x="1063" y="984" class="label">YESTERDAY / 27 OCT</text><text x="1063" y="1013">Household total: 12.00 kWh</text>
+<text x="1063" y="1038" class="s">Included: AC 4.00 · Fridge 1.00</text><text x="1063" y="1061" class="s">Dishwasher 2.00 · Other 5.00 kWh</text><text x="1063" y="1084" class="s">Other = calculated remainder</text><text x="1063" y="1107" class="s">Inspect consumption →</text>
+<rect x="1048" y="1138" width="392" height="66" rx="5" class="card"/>
+<text x="1063" y="1164" class="label">RECOMMENDATIONS</text><text x="1063" y="1188" class="s">AC: largest monitored contributor. Details →</text>
+<path d="M1030 1224H1458" class="line"/><text x="1055" y="1254">Home</text><text x="1160" y="1254">Usage</text><text x="1265" y="1254">Bills</text><text x="1350" y="1254">Devices</text>
+<text x="42" y="1261" class="s">All controls are wireframe annotations. No production app or live readings are represented.</text>
+<text x="42" y="1287" class="s">Forecast calculation time and contribution period remain explicit; appliance consumption is never added to household totals.</text>
+<text x="42" y="1313" class="s">See screen-requirements.md and wireframes.md for forms, navigation, failure states and unresolved decisions.</text>
+</svg>
