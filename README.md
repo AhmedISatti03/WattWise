@@ -23,6 +23,16 @@ Developed for **CENG481 — The Agile Professional**, the project combines elect
 
 The [MVP scope](docs/mvp-scope.md) defines the detailed requirements, boundaries, and acceptance criteria. It is currently a draft for team review.
 
+## Implementation handoffs
+
+The finalized v1.0 handoffs guide the local demonstration using synthetic readings, persistent household data, and conversational assistant integration.
+
+- [Backend handoff for Umut](docs/handoffs/WattWise_Backend_Handoff_Umut_v1.0.md) · [Word document](docs/handoffs/WattWise_Backend_Handoff_Umut_v1.0.docx)
+- [Frontend handoff for Miray](docs/handoffs/WattWise_Frontend_Handoff_Miray_v1.0.md) · [Word document](docs/handoffs/WattWise_Frontend_Handoff_Miray_v1.0.docx)
+- [Reading order and coordination](docs/handoffs/README.md)
+
+The handoffs record the current delivery decisions, including Umut's baseline forecasting and Ahmed's assistant and ML responsibilities. Apply them alongside the existing MVP documents. Umut proposes outstanding rules and the shared API contract for confirmation with Ahmed and Miray before the affected implementation. Task references BE01–BE11 and FE01–FE10 will be mapped to GitHub issues during backlog setup.
+
 ## How the system fits together
 
 ```text
@@ -206,3 +216,4 @@ These remain outside the current MVP unless the team agrees and documents a scop
 The repository will retain evidence of development decisions, contributions, testing, iteration reviews, and feedback to support the group demonstration and individual critical reports.
 
 AI-assisted development will be acknowledged and justified, and the team will remain responsible for understanding and explaining the submitted work.
+
