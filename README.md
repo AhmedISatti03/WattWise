@@ -4,7 +4,7 @@ WattWise is a household energy management application that helps users understan
 
 Developed for **CENG481 — The Agile Professional**, the project combines electricity-bill information, whole-household measurements, and selected appliance readings in one responsive web application. The initial pilot focuses on households in Türkiye, with further development planned for the Final Year Project.
 
-**Project status:** Planning and hardware validation. Application implementation has not yet been added to this repository.
+**Project status:** Local backend review increment: runnable health/database scaffold and opt-in synthetic mock API. Shared business contracts remain proposals for review. The frontend foundation is on `feature/task-9-frontend-foundation` in PR #13; the complete integrated demonstration is not yet implemented.
 
 **Supervisor:** Prof. Dr. Kaya Kuru  
 **Academic year:** 2026–2027
@@ -52,11 +52,11 @@ Smart plugs ──────→ Collection → Consumption records        │
 
 These are logical components. They do not require separate deployed services.
 
-The technology stack, device models, and deployment approach will be confirmed through initial feasibility work.
+The proposed backend stack and pending decisions are recorded in the [backend design proposal](docs/backend/design-proposal.md). Device models and deployment choices remain subject to validation.
 
 ## Repository organization
 
-The repository currently contains this README, the MVP scope, and the hardware comparison. The following structure is proposed as implementation begins; folders should be introduced when they contain useful work.
+This local increment adds `backend/`, draft contracts in `docs/api/`, and design/review documents in `docs/backend/` alongside the existing planning documents and handoffs. The following broader structure remains a proposal; folders should be introduced when they contain useful work.
 
 ```text
 WattWise/
@@ -161,8 +161,8 @@ A task is complete when:
 
 | Team member | Primary responsibility |
 |---|---|
-| **Muhammad Ahmed Satti** | Group lead, energy intelligence, and technical coordination: bill extraction and validation, tariff calculations, forecasting, recommendations, and analytical evaluation. |
-| **Umut Topatan** | Backend and IoT integration: device connectivity, ingestion, storage, accounts, APIs, scheduled processing, and deployment. |
+| **Muhammad Ahmed Satti** | Group lead, technical coordination, coding and integration review; conversational assistant, AI evaluation, and ML forecasting improvements under the v1.0 handoff. |
+| **Umut Topatan** | Backend, persistence, ingestion, simulation, calculation services, baseline forecasting, contract proposals, and future hardware integration under the v1.0 handoff. |
 | **Miray Pınarbaşı** | Frontend and user experience: onboarding, bill confirmation, dashboards, device status, budget settings, and alert presentation. |
 
 Ownership provides a clear point of responsibility. All members support integration, testing, reviews, documentation, and demonstrations, with workloads reviewed during each iteration.
@@ -196,12 +196,15 @@ Test data and recorded demonstration data will be clearly labelled. Detailed met
 
 ## Getting started
 
-The repository is currently in the planning stage. Runtime requirements and installation commands will be added after the initial technology and hardware feasibility checks.
+For this local review increment, follow the [backend setup instructions](backend/README.md). They cover Python 3.12+, SQLite or optional PostgreSQL, explicit migrations, health checks, the synthetic mock API, and tests. These are scaffold instructions, not a claim that the complete household journey is ready.
 
 Start with:
 
 - [MVP scope and acceptance criteria](docs/mvp-scope.md)
 - [Hardware comparison and integration considerations](docs/WattWise_Hardware_Comparison.txt)
+- [Backend design and decisions](docs/backend/README.md)
+- [Draft frontend–backend contract](docs/api/frontend-contract.md)
+- [Task-to-handoff mapping](docs/backend/task-mapping.md)
 
 Component setup instructions will be maintained alongside the frontend, backend, and collector as those components are introduced.
 

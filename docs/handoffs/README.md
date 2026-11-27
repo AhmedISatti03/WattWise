@@ -23,6 +23,12 @@ The initial integration checkpoint connects saved household settings and consump
 - [Collector plan](../architecture/collector-plan.md)
 - [Screen requirements](../frontend/screen-requirements.md)
 - [Wireframes](../frontend/wireframes.md)
+- [Backend design proposal and review package](../backend/README.md)
+- [Draft shared API contract](../api/frontend-contract.md)
+- [Backend decision log](../backend/decision-log.md)
+- [Synthetic scenario definitions](../backend/scenario-definitions.md)
+- [Task-to-handoff mapping](../backend/task-mapping.md)
+- [Proposed scope reconciliation](../backend/scope-amendment.md)
 
 The Word handoffs refer to `docs/product/insight-scenarios.md`. The existing repository file is `docs/insight-scenarios.md`, linked above. Use that current location during inspection.
 
