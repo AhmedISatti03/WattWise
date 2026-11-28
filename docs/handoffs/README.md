@@ -7,6 +7,10 @@ Finalized handoff versions are 1.0, dated 26 November 2026.
 | Umut Topatan | [Backend handoff](WattWise_Backend_Handoff_Umut_v1.0.md) | [Word](WattWise_Backend_Handoff_Umut_v1.0.docx) |
 | Miray Pınarbaşı | [Frontend handoff](WattWise_Frontend_Handoff_Miray_v1.0.md) | [Word](WattWise_Frontend_Handoff_Miray_v1.0.docx) |
 
+## Backend integration for Miray
+
+The backend integration handoff accompanies the frontend handoff. It covers the PR #29 mock service, the first #19 review, and the checks for #11, #12, #20 and #22. [Markdown](WattWise_Backend_Integration_Handoff_Miray_v1.0.md) · [Word](WattWise_Backend_Integration_Handoff_Miray_v1.0.docx)
+
 ## Start here
 
 Read the assigned GitHub issue and your handoff, then inspect the current repository and the counterpart's integration requirements. The Markdown copies preserve the Word documents' body text and tables. Version 1.0 is the published baseline in both formats. Record subsequent approved revisions with matching version updates in both formats.
