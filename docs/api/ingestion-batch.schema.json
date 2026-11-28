@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WattWise proposed collector batch v1",
+  "description": "Working proposal for #17. This schema describes the transport envelope, independently validated events, and the HTTP 200 response. Request body size, authorization, clock, counter, and duplicate rules require application validation.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/batchEnvelope"
+    },
+    {
+      "$ref": "#/$defs/batchResponse"
+    }
+  ],
+  "$defs": {
+    "batchEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "events"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {},
+          "description": "Each parsed event is validated separately against readingEvent. Invalid entries have per-event outcomes."
+        }
+      }
+    },
+    "readingEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "collector_id",
+        "device_id",
+        "measurement_scope",
+        "source_kind",
+        "sample_run_id",
+        "device_measured_at",
+        "collected_at",
+        "timestamp_basis",
+        "power_w",
+        "energy_import_total_kwh",
+        "counter_epoch",
+        "quality_flags",
+        "reset_evidence"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "collector_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "measurement_scope": {
+          "enum": [
+            "household",
+            "appliance"
+          ]
+        },
+        "source_kind": {
+          "enum": [
+            "simulated",
+            "physical_device"
+          ]
+        },
+        "sample_run_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "device_measured_at": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collected_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timestamp_basis": {
+          "enum": [
+            "device_measurement",
+            "collector_observation"
+          ]
+        },
+        "power_w": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "energy_import_total_kwh": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "counter_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quality_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "partial_measurement",
+              "counter_reset"
+            ]
+          }
+        },
+        "reset_evidence": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "previous_event_id"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "simulated_reset",
+                    "device_reset"
+                  ]
+                },
+                "previous_event_id": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source_kind": {
+                "const": "simulated"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "sample_run_id": {
+                "type": "string"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "sample_run_id": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "timestamp_basis": {
+                "const": "device_measurement"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "device_measured_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "device_measured_at": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "anyOf": [
+              {
+                "properties": {
+                  "power_w": {
+                    "type": "null"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "energy_import_total_kwh": {
+                    "type": "null"
+                  }
+                }
+              }
+            ]
+          },
+          "then": {
+            "properties": {
+              "quality_flags": {
+                "contains": {
+                  "const": "partial_measurement"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "quality_flags": {
+                "contains": {
+                  "const": "counter_reset"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reset_evidence": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "previous_event_id"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "simulated_reset",
+                      "device_reset"
+                    ]
+                  },
+                  "previous_event_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              },
+              "counter_epoch": {
+                "minimum": 1
+              },
+              "energy_import_total_kwh": {
+                "type": "number"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reset_evidence": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
+      "anyOf": [
+        {
+          "properties": {
+            "power_w": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "properties": {
+            "energy_import_total_kwh": {
+              "type": "number"
+            }
+          }
+        }
+      ]
+    },
+    "batchResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "meta",
+        "results"
+      ],
+      "properties": {
+        "meta": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractVersion",
+            "requestId"
+          ],
+          "properties": {
+            "contractVersion": {
+              "const": "0.1-draft"
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "results": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/eventResult"
+          }
+        }
+      }
+    },
+    "eventResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventIndex",
+        "eventId",
+        "status",
+        "code",
+        "message",
+        "receivedAt"
+      ],
+      "properties": {
+        "eventIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "eventId": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "already_stored",
+            "rejected"
+          ]
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "receivedAt": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "status": {
+            "const": "rejected"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "code": {
+            "enum": [
+              "invalid_event",
+              "device_unavailable",
+              "invalid_reading_value",
+              "unsupported_measurement",
+              "invalid_observation_time",
+              "outside_late_window",
+              "reset_evidence_required",
+              "event_conflict",
+              "observation_conflict"
+            ]
+          },
+          "receivedAt": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "null"
+          },
+          "message": {
+            "type": "null"
+          },
+          "receivedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

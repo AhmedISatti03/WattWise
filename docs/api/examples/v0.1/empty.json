@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "sample": true,
+    "sampleLabel": "Sample data — not real household measurements",
+    "householdId": "sample-household",
+    "timezone": "Europe/Istanbul",
+    "generatedAt": "2026-10-28T14:30:00+03:00",
+    "contractVersion": "0.1-draft",
+    "contractStatus": "proposed",
+    "sourceType": "synthetic",
+    "asOf": "2026-10-28T14:30:00+03:00",
+    "requestId": "sample-request-empty",
+    "scenario": "empty",
+    "settingsRevision": 2
+  },
+  "billingCycle": {
+    "start": "2026-10-18T00:00:00+03:00",
+    "endExclusive": "2026-11-17T00:00:00+03:00",
+    "lastIncludedDate": "2026-11-16"
+  },
+  "setupCompleteness": {
+    "status": "complete",
+    "missingFields": []
+  },
+  "currentPower": {
+    "value": null,
+    "unit": "W",
+    "classification": "measured",
+    "observedAt": null,
+    "status": "no_readings",
+    "receivedAt": null,
+    "unavailableReason": "no_readings",
+    "explanation": "No household readings yet."
+  },
+  "todayEnergy": {
+    "value": null,
+    "unit": "kWh",
+    "classification": "unavailable",
+    "period": {
+      "start": "2026-10-28T00:00:00+03:00",
+      "endExclusive": "2026-10-28T14:30:00+03:00"
+    },
+    "partialDay": true,
+    "coverage": {
+      "status": "none",
+      "gaps": []
+    },
+    "unavailableReason": "no_readings",
+    "explanation": "No readings are available in the selected interval."
+  },
+  "selectedPeriodEnergy": {
+    "value": null,
+    "unit": "kWh",
+    "classification": "unavailable",
+    "coverage": {
+      "status": "none",
+      "gaps": []
+    },
+    "unavailableReason": "no_readings",
+    "explanation": "No readings yet.",
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    }
+  },
+  "contributions": {
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "coverage": {
+        "status": "none",
+        "gaps": []
+      },
+      "unavailableReason": "no_readings",
+      "explanation": "No readings yet."
+    },
+    "appliances": [],
+    "other": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "unavailableReason": "no_readings",
+      "explanation": "Household and appliance data are unavailable.",
+      "sharePercent": null
+    },
+    "coverage": {
+      "status": "none",
+      "gaps": []
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "household-monitor",
+      "name": "Whole-household monitor",
+      "scope": "household",
+      "status": "awaiting_first_reading",
+      "lastReadingAt": null,
+      "lastReceivedAt": null,
+      "sourceType": "synthetic",
+      "unavailableReason": "no_readings",
+      "explanation": "Awaiting first reading."
+    },
+    {
+      "deviceId": "plug-ac",
+      "name": "AC",
+      "scope": "appliance",
+      "status": "awaiting_first_reading",
+      "lastReadingAt": null,
+      "lastReceivedAt": null,
+      "sourceType": "synthetic",
+      "unavailableReason": "no_readings",
+      "explanation": "Awaiting first reading."
+    },
+    {
+      "deviceId": "plug-fridge",
+      "name": "Fridge",
+      "scope": "appliance",
+      "status": "awaiting_first_reading",
+      "lastReadingAt": null,
+      "lastReceivedAt": null,
+      "sourceType": "synthetic",
+      "unavailableReason": "no_readings",
+      "explanation": "Awaiting first reading."
+    },
+    {
+      "deviceId": "plug-dishwasher",
+      "name": "Dishwasher",
+      "scope": "appliance",
+      "status": "awaiting_first_reading",
+      "lastReadingAt": null,
+      "lastReceivedAt": null,
+      "sourceType": "synthetic",
+      "unavailableReason": "no_readings",
+      "explanation": "Awaiting first reading."
+    }
+  ],
+  "collector": {
+    "collectorId": "sample-collector",
+    "status": "reporting",
+    "lastContactAt": "2026-10-28T14:30:00+03:00",
+    "pendingCount": 0,
+    "pendingCountReportedAt": "2026-10-28T14:30:00+03:00",
+    "explanation": null
+  },
+  "trend": {
+    "scope": "household",
+    "unit": "kWh",
+    "resolution": "day",
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "buckets": []
+  },
+  "cost": {
+    "value": null,
+    "unit": "TRY",
+    "classification": "estimated_energy_cost",
+    "chargeBasis": "energy_only",
+    "tariffVersion": "fictional-flat-3-v1",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-10-28T14:30:00+03:00"
+    },
+    "observedEnergyKwh": null,
+    "coverage": {
+      "status": "none",
+      "gaps": []
+    },
+    "unavailableReason": "no_readings",
+    "explanation": "No measured energy to price."
+  },
+  "forecast": {
+    "value": null,
+    "unit": "TRY",
+    "classification": "forecast",
+    "chargeBasis": "energy_only",
+    "eligible": false,
+    "energyEligible": false,
+    "energyUnavailableReason": "insufficient_valid_days",
+    "methodId": "recent-7-complete-days",
+    "methodVersion": "proposal-1",
+    "calculatedAt": "2026-10-28T00:00:00+03:00",
+    "asOf": "2026-10-28T00:00:00+03:00",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    },
+    "historyPeriod": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "validDays": 0,
+    "minimumValidDays": 7,
+    "observedEnergyKwh": null,
+    "projectedEnergyKwh": null,
+    "projectedPeriod": {
+      "start": "2026-10-28T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00"
+    },
+    "isStale": false,
+    "maturity": "early",
+    "assumptions": [
+      "Recent mean usage continues.",
+      "Synthetic example; not a real-household accuracy result.",
+      "Energy charges only."
+    ],
+    "unavailableReason": "insufficient_valid_days",
+    "explanation": "At least seven complete valid days and complete elapsed-cycle coverage are required."
+  },
+  "budget": {
+    "value": 800,
+    "unit": "TRY",
+    "classification": "user_target",
+    "chargeBasis": "energy_only",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    },
+    "unavailableReason": null,
+    "explanation": null
+  },
+  "budgetPosition": {
+    "state": "unavailable",
+    "projectedDifference": null,
+    "unit": "TRY",
+    "forecastCalculatedAt": "2026-10-28T00:00:00+03:00",
+    "unavailableReason": "forecast_unavailable",
+    "explanation": "A budget exists, but an eligible forecast does not.",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    }
+  }
+}

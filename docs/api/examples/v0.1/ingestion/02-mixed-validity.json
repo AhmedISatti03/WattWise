@@ -1,0 +1,70 @@
+{
+  "sample": true,
+  "sampleLabel": "Fictional WattWise ingestion scenario",
+  "request": {
+    "schema_version": 1,
+    "events": [
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467003",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T11:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": 103,
+        "counter_epoch": 0,
+        "quality_flags": [],
+        "reset_evidence": null
+      },
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467004",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T12:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": -1,
+        "counter_epoch": 0,
+        "quality_flags": [],
+        "reset_evidence": null
+      }
+    ]
+  },
+  "expectedHttpStatus": 200,
+  "response": {
+    "meta": {
+      "contractVersion": "0.1-draft",
+      "requestId": "eb17203f-b546-4c99-a23e-c2d17c5a5f02"
+    },
+    "results": [
+      {
+        "eventIndex": 0,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467003",
+        "status": "accepted",
+        "code": null,
+        "message": null,
+        "receivedAt": "2026-11-28T09:01:00Z"
+      },
+      {
+        "eventIndex": 1,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467004",
+        "status": "rejected",
+        "code": "invalid_reading_value",
+        "message": "The cumulative imported energy must be nonnegative.",
+        "receivedAt": null
+      }
+    ]
+  },
+  "expectedEffects": [
+    "Only the 11:00Z observation commits.",
+    "The unsupported negative reading has no receipt or derived result."
+  ]
+}

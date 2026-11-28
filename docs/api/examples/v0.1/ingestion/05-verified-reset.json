@@ -1,0 +1,75 @@
+{
+  "sample": true,
+  "sampleLabel": "Fictional WattWise ingestion scenario",
+  "request": {
+    "schema_version": 1,
+    "events": [
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467005",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T12:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": 0,
+        "counter_epoch": 1,
+        "quality_flags": [
+          "counter_reset"
+        ],
+        "reset_evidence": {
+          "kind": "simulated_reset",
+          "previous_event_id": "48262d61-2b10-4b67-9a24-030581467003"
+        }
+      },
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467006",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T13:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": 0.5,
+        "counter_epoch": 1,
+        "quality_flags": [],
+        "reset_evidence": null
+      }
+    ]
+  },
+  "expectedHttpStatus": 200,
+  "response": {
+    "meta": {
+      "contractVersion": "0.1-draft",
+      "requestId": "eb17203f-b546-4c99-a23e-c2d17c5a5f05"
+    },
+    "results": [
+      {
+        "eventIndex": 0,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467005",
+        "status": "accepted",
+        "code": null,
+        "message": null,
+        "receivedAt": "2026-11-28T09:04:00Z"
+      },
+      {
+        "eventIndex": 1,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467006",
+        "status": "accepted",
+        "code": null,
+        "message": null,
+        "receivedAt": "2026-11-28T09:04:00Z"
+      }
+    ]
+  },
+  "expectedEffects": [
+    "The registered simulated reset at 12:00Z opens epoch 1 using the stored 11:00Z event as the predecessor.",
+    "Energy across 11:00–12:00Z is unavailable. The 12:00–13:00Z delta is 0.5 kWh."
+  ]
+}

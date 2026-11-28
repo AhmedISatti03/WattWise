@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "sample": true,
+    "sampleLabel": "Sample data — not real household measurements",
+    "householdId": "sample-household",
+    "timezone": "Europe/Istanbul",
+    "generatedAt": "2026-10-28T14:30:00+03:00",
+    "contractVersion": "0.1-draft",
+    "contractStatus": "proposed",
+    "sourceType": "synthetic",
+    "asOf": "2026-10-28T14:30:00+03:00",
+    "requestId": "sample-request-error",
+    "scenario": "error"
+  },
+  "error": {
+    "code": "service_unavailable",
+    "message": "Could not refresh dashboard data.",
+    "retryable": true,
+    "retryAfterSeconds": 5,
+    "fieldErrors": []
+  }
+}

@@ -1,0 +1,265 @@
+{
+  "normal": {
+    "period": {
+      "start": "2026-10-27T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": 12,
+      "unit": "kWh",
+      "classification": "measured",
+      "coverage": {
+        "status": "complete",
+        "gaps": []
+      },
+      "unavailableReason": null,
+      "explanation": null
+    },
+    "appliances": [
+      {
+        "deviceId": "plug-ac",
+        "name": "AC",
+        "value": 4,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 33.33333333333333,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-fridge",
+        "name": "Fridge",
+        "value": 1,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 8.333333333333332,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-dishwasher",
+        "name": "Dishwasher",
+        "value": 2,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 16.666666666666664,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      }
+    ],
+    "other": {
+      "value": 5,
+      "unit": "kWh",
+      "classification": "calculated_remainder",
+      "unavailableReason": null,
+      "explanation": null,
+      "sharePercent": 41.66666666666667
+    },
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    }
+  },
+  "empty": {
+    "period": {
+      "start": "2026-10-27T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "coverage": {
+        "status": "none",
+        "gaps": []
+      },
+      "unavailableReason": "no_readings",
+      "explanation": "No readings yet."
+    },
+    "appliances": [],
+    "other": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "unavailableReason": "no_readings",
+      "explanation": "Household and appliance data are unavailable.",
+      "sharePercent": null
+    },
+    "coverage": {
+      "status": "none",
+      "gaps": []
+    }
+  },
+  "partial-data": {
+    "period": {
+      "start": "2026-10-27T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": 12,
+      "unit": "kWh",
+      "classification": "measured",
+      "coverage": {
+        "status": "complete",
+        "gaps": []
+      },
+      "unavailableReason": null,
+      "explanation": null
+    },
+    "appliances": [
+      {
+        "deviceId": "plug-ac",
+        "name": "AC",
+        "value": 4,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 33.33333333333333,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-fridge",
+        "name": "Fridge",
+        "value": 1,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 8.333333333333332,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-dishwasher",
+        "name": "Dishwasher",
+        "value": 2,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 16.666666666666664,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      }
+    ],
+    "other": {
+      "value": 5,
+      "unit": "kWh",
+      "classification": "calculated_remainder",
+      "unavailableReason": null,
+      "explanation": null,
+      "sharePercent": 41.66666666666667
+    },
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    }
+  },
+  "device-disconnected": {
+    "period": {
+      "start": "2026-10-27T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": 12,
+      "unit": "kWh",
+      "classification": "measured",
+      "coverage": {
+        "status": "complete",
+        "gaps": []
+      },
+      "unavailableReason": null,
+      "explanation": null
+    },
+    "appliances": [
+      {
+        "deviceId": "plug-ac",
+        "name": "AC",
+        "value": 4,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 33.33333333333333,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-fridge",
+        "name": "Fridge",
+        "value": null,
+        "unit": "kWh",
+        "classification": "unavailable",
+        "status": "stale",
+        "sharePercent": null,
+        "coverage": {
+          "status": "partial",
+          "gaps": [
+            {
+              "start": "2026-10-27T00:00:00+03:00",
+              "endExclusive": "2026-10-28T00:00:00+03:00"
+            }
+          ]
+        },
+        "unavailableReason": "incomplete_interval",
+        "explanation": "Fridge interval energy is not established."
+      },
+      {
+        "deviceId": "plug-dishwasher",
+        "name": "Dishwasher",
+        "value": 2,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 16.666666666666664,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      }
+    ],
+    "other": {
+      "value": null,
+      "unit": "kWh",
+      "classification": "unavailable",
+      "unavailableReason": "incomplete_interval",
+      "explanation": "Remainder requires complete matching appliance energy.",
+      "sharePercent": null
+    },
+    "coverage": {
+      "status": "partial",
+      "gaps": []
+    }
+  }
+}

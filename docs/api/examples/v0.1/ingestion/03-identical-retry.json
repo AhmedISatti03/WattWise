@@ -1,0 +1,46 @@
+{
+  "sample": true,
+  "sampleLabel": "Fictional WattWise ingestion scenario",
+  "request": {
+    "schema_version": 1,
+    "events": [
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467002",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T10:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": 102,
+        "counter_epoch": 0,
+        "quality_flags": [],
+        "reset_evidence": null
+      }
+    ]
+  },
+  "expectedHttpStatus": 200,
+  "response": {
+    "meta": {
+      "contractVersion": "0.1-draft",
+      "requestId": "eb17203f-b546-4c99-a23e-c2d17c5a5f03"
+    },
+    "results": [
+      {
+        "eventIndex": 0,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467002",
+        "status": "already_stored",
+        "code": null,
+        "message": null,
+        "receivedAt": "2026-11-28T09:00:00Z"
+      }
+    ]
+  },
+  "expectedEffects": [
+    "The request succeeds after a lost or discarded response.",
+    "The stored 10:00Z observation keeps its original receipt, and the reading count does not change."
+  ]
+}

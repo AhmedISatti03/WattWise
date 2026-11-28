@@ -4,7 +4,7 @@ WattWise is a household energy management application that helps users understan
 
 Developed for **CENG481 — The Agile Professional**, the project combines electricity-bill information, whole-household measurements, and selected appliance readings in one responsive web application. The initial pilot focuses on households in Türkiye, with further development planned for the Final Year Project.
 
-**Project status:** Planning and hardware validation. Application implementation has not yet been added to this repository.
+**Project status:** Ahmed accepted the runnable local backend foundation in #15. The dashboard contract and synthetic mock updates are prepared for review in PR #29. The integrated demonstration will use stored synthetic readings and a coordinated assistant.
 
 **Supervisor:** Prof. Dr. Kaya Kuru  
 **Academic year:** 2026–2027
@@ -22,6 +22,16 @@ Developed for **CENG481 — The Agile Professional**, the project combines elect
 | Explainable recommendations | Provide practical suggestions supported by consumption patterns and the configured tariff. |
 
 The [MVP scope](docs/mvp-scope.md) defines the detailed requirements, boundaries, and acceptance criteria. It is currently a draft for team review.
+
+## Implementation handoffs
+
+The finalized v1.0 handoffs guide the local demonstration using synthetic readings, persistent household data, and conversational assistant integration.
+
+- [Backend handoff for Umut](docs/handoffs/WattWise_Backend_Handoff_Umut_v1.0.md) · [Word document](docs/handoffs/WattWise_Backend_Handoff_Umut_v1.0.docx)
+- [Frontend handoff for Miray](docs/handoffs/WattWise_Frontend_Handoff_Miray_v1.0.md) · [Word document](docs/handoffs/WattWise_Frontend_Handoff_Miray_v1.0.docx)
+- [Reading order and coordination](docs/handoffs/README.md)
+
+The handoffs record the current delivery decisions, including Umut's baseline forecasting and Ahmed's assistant and ML responsibilities. Apply them alongside the existing MVP documents. Umut proposes outstanding rules and the shared API contract for confirmation with Ahmed and Miray before the affected implementation. Task references BE01–BE11 and FE01–FE10 will be mapped to GitHub issues during backlog setup.
 
 ## How the system fits together
 
@@ -42,11 +52,11 @@ Smart plugs ──────→ Collection → Consumption records        │
 
 These are logical components. They do not require separate deployed services.
 
-The technology stack, device models, and deployment approach will be confirmed through initial feasibility work.
+Ahmed approved Python with FastAPI and Pydantic, SQLAlchemy for persistence, and Alembic for migrations. PostgreSQL is the database target for the integrated demonstration. SQLite is available for local development and foundation checks. See the [review handoff](https://github.com/AhmedISatti03/WattWise/blob/6b3cae4/docs/backend/ahmed-review-response-v1.md) and [decision log](docs/backend/decision-log.md) for the approved direction and choices still open.
 
 ## Repository organization
 
-The repository currently contains this README, the MVP scope, and the hardware comparison. The following structure is proposed as implementation begins; folders should be introduced when they contain useful work.
+This local increment adds `backend/`, draft contracts in `docs/api/`, and design/review documents in `docs/backend/` alongside the existing planning documents and handoffs. The following broader structure remains a proposal; folders should be introduced when they contain useful work.
 
 ```text
 WattWise/
@@ -151,8 +161,8 @@ A task is complete when:
 
 | Team member | Primary responsibility |
 |---|---|
-| **Muhammad Ahmed Satti** | Group lead, energy intelligence, and technical coordination: bill extraction and validation, tariff calculations, forecasting, recommendations, and analytical evaluation. |
-| **Umut Topatan** | Backend and IoT integration: device connectivity, ingestion, storage, accounts, APIs, scheduled processing, and deployment. |
+| **Muhammad Ahmed Satti** | Group lead, technical coordination, coding and integration review; conversational assistant, AI evaluation, and ML forecasting improvements under the v1.0 handoff. |
+| **Umut Topatan** | Backend, persistence, ingestion, simulation, calculation services, baseline forecasting, contract proposals, and future hardware integration under the v1.0 handoff. |
 | **Miray Pınarbaşı** | Frontend and user experience: onboarding, bill confirmation, dashboards, device status, budget settings, and alert presentation. |
 
 Ownership provides a clear point of responsibility. All members support integration, testing, reviews, documentation, and demonstrations, with workloads reviewed during each iteration.
@@ -186,18 +196,21 @@ Test data and recorded demonstration data will be clearly labelled. Detailed met
 
 ## Getting started
 
-The repository is currently in the planning stage. Runtime requirements and installation commands will be added after the initial technology and hardware feasibility checks.
+Follow the [backend setup instructions](backend/README.md) for Python 3.12+, the local SQLite and PostgreSQL profiles, migrations, health checks, and the opt-in mock API.
 
 Start with:
 
 - [MVP scope and acceptance criteria](docs/mvp-scope.md)
 - [Hardware comparison and integration considerations](docs/WattWise_Hardware_Comparison.txt)
+- [Backend design and decisions](docs/backend/README.md)
+- [Draft frontend–backend contract](docs/api/frontend-contract.md)
+- [Task-to-handoff mapping](docs/backend/task-mapping.md)
 
 Component setup instructions will be maintained alongside the frontend, backend, and collector as those components are introduced.
 
 ## Beyond the MVP
 
-Potential FYP extensions include native mobile applications, additional device models and bill formats, appliance control, advanced forecasting, and conversational energy guidance.
+Potential FYP extensions include native mobile applications, additional device models and bill formats, appliance control, and advanced forecasting.
 
 These remain outside the current MVP unless the team agrees and documents a scope change.
 
@@ -206,3 +219,4 @@ These remain outside the current MVP unless the team agrees and documents a scop
 The repository will retain evidence of development decisions, contributions, testing, iteration reviews, and feedback to support the group demonstration and individual critical reports.
 
 AI-assisted development will be acknowledged and justified, and the team will remain responsible for understanding and explaining the submitted work.
+
