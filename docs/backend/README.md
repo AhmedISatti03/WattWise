@@ -1,14 +1,15 @@
 # Backend design and handoff review
 
-**Version:** proposal 0.1 · **Date:** 27 November 2026 · **Owner:** Umut Topatan
+**Version:** reviewed direction and implementation proposals · **Updated:** 28 November 2026 · **Owner:** Umut Topatan
 
-This package addresses the design deliverables for #14 and #11, prepares #12 and the independent scaffold portion of #15, and maps the later backend work. It does not record Ahmed's approval of unresolved business rules or shared interfaces.
+Ahmed reviewed and approved the core design direction in D01–D14 with qualifications. He also accepted the runnable foundation in #15 after a Linux/SQLite setup check. Issue #30 records the implementation recommendations that still need confirmation, starting with account and settings behaviour.
 
 - [Design proposal](design-proposal.md)
+- [Ahmed's review and next-task handoff](https://github.com/AhmedISatti03/WattWise/blob/6b3cae4/docs/backend/ahmed-review-response-v1.md)
 - [Decision log and confirmation questions](decision-log.md)
 - [Task-to-handoff mapping](task-mapping.md)
 - [Synthetic scenarios and expected outcomes](scenario-definitions.md)
-- [Proposed scope amendment](scope-amendment.md)
+- [Local demonstration scope amendment](scope-amendment.md)
 - [Draft frontend API contract](../api/frontend-contract.md)
 - [Backend v1.0 handoff](../handoffs/WattWise_Backend_Handoff_Umut_v1.0.md)
 - [Frontend v1.0 handoff](../handoffs/WattWise_Frontend_Handoff_Miray_v1.0.md)

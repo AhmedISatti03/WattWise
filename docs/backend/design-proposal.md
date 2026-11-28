@@ -1,7 +1,10 @@
 # Backend design proposal
 
-**Status:** Draft for Ahmed and frontend review · **Version:** 0.1 · **Date:** 27 November 2026  
+**Status:** Core design direction reviewed by Ahmed on 28 November 2026 · **Version:** 0.1 · **Prepared:** 27 November 2026
+
 **Issues:** #14, #11 · **Handoff:** backend v1.0, BE01
+
+The [decision log](decision-log.md) records the exact review and the #30 follow-up proposals for shared behavior.
 
 ## 1. Existing work and intended increment
 
@@ -9,12 +12,12 @@ The repository's `main` contains the seven-feature scope, worked measurement exa
 
 The initial increment provides a reviewable stack proposal, shared contract/examples, decision log, and task/scenario mapping. Independent code scaffolding can provide startup/configuration, database migration machinery, health checks and explicitly labelled mock endpoints while shared behavior awaits confirmation. Do not promote mock responses to integrated backend completion.
 
-## 2. Proposed technical stack
+## 2. Technical direction
 
 | Concern | Recommendation | Rationale / alternative |
 |---|---|---|
-| Runtime/API | Python 3.12+ and FastAPI with Pydantic validation | Fits data processing and Ahmed's Python integrations; typed validation/OpenAPI. A TypeScript server is viable but introduces a different analytical integration boundary. |
-| Persistence | PostgreSQL 17 target; SQLAlchemy 2 ORM and Alembic migrations | Transactions, constraints, timezone-aware timestamps and a clear schema history. SQLite is a portable scaffold/test profile, not evidence of PostgreSQL compatibility. A `postgres:17-alpine` local verification profile is available; actual results belong in the verification evidence. |
+| Runtime/API | Approved Python and FastAPI with Pydantic validation | Fits data processing and Ahmed's Python integrations, with typed validation/OpenAPI. |
+| Persistence | Approved SQLAlchemy and Alembic with PostgreSQL as the integrated demo target | Transactions, constraints, timezone-aware timestamps and a schema history. The local PostgreSQL 17 profile and SQLite development/test profile are documented in the backend README. |
 | Local database startup | Existing local PostgreSQL or a separately configured container | Document both choices; the laptop demonstration must not depend on a hosted database. Do not require Docker merely to inspect the initial scaffold. |
 | Browser authentication | Revocable opaque server-side session, hashed token in an HttpOnly, SameSite=Lax cookie; CSRF token on mutations | Supports session restoration without browser localStorage tokens and permits immediate revocation. Use Secure cookies with HTTPS; any loopback-only HTTP development exception must be explicit. Exact origins, cookie lifetime and CSRF validation remain subject to D02 confirmation. |
 | Device authentication | Separate revocable collector credential, scoped server-side to registered devices/household | User and collector permissions remain distinct. Payload household IDs never establish ownership. |
@@ -57,13 +60,13 @@ Proposed repository areas: `backend/` for application/migrations/tests/commands;
 
 Money/rates use Decimal in calculation and an agreed JSON decimal representation. Energy/power must be finite, retain calculation precision, and round only on display. Database uniqueness enforces idempotency; application-side duplicate checks alone are insufficient.
 
-## 5. Common behavior to confirm
+## 5. Common behavior and remaining choices
 
 Use UTC RFC3339 instants in storage/API and household timezone for calendar boundaries; periods are `[start,endExclusive)`. Translate local midnight boundaries before querying. Reject naive times. Reading `receivedAt` is server-controlled; replay `asOf` is a separate authorized demo clock and must not allow a caller to falsify real receipt time.
 
-Propose cumulative imported active-energy counters, matching the collector plan. Counter deltas apply only within the same device/counter epoch. An observed counter decrease without an explicit new epoch is quarantined/rejected for review; a new epoch establishes a baseline rather than counting its initial value as consumption. Sort accepted observations by observed time before deriving intervals. A late arrival may split an old interval and invalidate dependent aggregates; it must not be added on top of the old delta.
+Ahmed approved cumulative imported active-energy counters, explicit epochs and valid late readings that update affected intervals. Derive deltas only within a compatible device/epoch. Verify reset evidence before starting a new counter baseline. Sort by observation time, and replace an interval split by a late reading with the newly supported deltas. The exact reset and late-arrival rules are proposed in the decision log.
 
-Duplicate semantics: same authenticated collector and event ID with equivalent normalized payload returns `already_stored`; changed payload returns `conflict`. Persist per-event outcomes and acknowledge after commit. Proposed partial-batch acceptance is explicit in the contract and requires review. An unknown/foreign device must not be registered as a side effect of ingestion.
+Ahmed approved partial batches, safe identical retries, changed duplicate conflicts and acknowledgement after commit. The #17 proposal names `already_stored` and `event_conflict` as outcomes for identical and changed duplicates, respectively. Registration establishes the allowed devices before ingestion.
 
 Coverage is not device connectivity. Two valid counters can establish interval energy across delayed transmission but do not reveal within-gap hourly use. Do not allocate an unbounded interval into arbitrary daily/tariff buckets by undocumented interpolation. Negative remainder is unavailable, not zero. See the [decision log](decision-log.md) for the proposed bucket/counter rules and open confirmation points.
 
@@ -71,7 +74,7 @@ Coverage is not device connectivity. Two valid counters can establish interval e
 
 Preserve the worked sample: household 12 kWh includes 4, 1 and 2 kWh appliances; other is 5 kWh. At a fictional flat TRY 3/kWh, energy charges are TRY 36, excluding other invoice components. Do not call that a complete bill estimate. Budget and forecast need the same period and charge basis.
 
-Retain the initial seven-complete-valid-days proposal. At the end of day 10, recorded 100 kWh plus 20 days × 10 kWh/day yields 300 kWh and TRY 900. The initial proposed recomputation is daily at household midnight; intraday recorded costs can be newer than the dated forecast. No full-cycle forecast when elapsed-cycle energy is genuinely missing. Confirm freshness and budget-message rules before implementation.
+Ahmed approved the seven latest complete valid days in the current cycle, reliable elapsed-cycle energy and daily household-midnight recomputation. At the end of day 10, recorded 100 kWh plus 20 days × 10 kWh/day yields 300 kWh and TRY 900. Intraday recorded costs can be newer than the dated forecast. Full-cycle projections require reliable elapsed-cycle energy. Freshness and budget-message rules still need confirmation.
 
 Assistant functions call the same household-authorized query services. Ahmed owns provider, prompts, orchestration and model evaluation; Umut owns service access and contracts. No model credentials reach the browser. Start read-only: summaries, comparisons, contribution evidence, forecasts and insights. Preserve the normal app during provider failure. Conversation persistence and streaming are separate decisions, not silently added in BE01.
 

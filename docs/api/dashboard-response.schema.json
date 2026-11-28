@@ -53,6 +53,10 @@
         "sourceType": {
           "const": "synthetic"
         },
+        "settingsRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
         "asOf": {
           "type": "string",
           "format": "date-time"
@@ -66,6 +70,7 @@
             "empty",
             "partial-data",
             "device-disconnected",
+            "incomplete-setup",
             "error"
           ]
         }
@@ -113,6 +118,42 @@
         }
       },
       "additionalProperties": true
+    },
+    "OptionalPeriod": {
+      "oneOf": [
+        { "$ref": "#/$defs/Period" },
+        { "type": "null" }
+      ]
+    },
+    "SetupCompleteness": {
+      "type": "object",
+      "required": ["status", "missingFields"],
+      "properties": {
+        "status": {
+          "enum": ["complete", "incomplete"]
+        },
+        "missingFields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field", "code", "message"],
+            "properties": {
+              "field": { "enum": ["billingCycle", "tariff", "budget"] },
+              "code": { "enum": ["billing_cycle_missing", "tariff_missing", "budget_missing"] },
+              "message": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      },
+      "if": {
+        "properties": { "status": { "const": "complete" } }
+      },
+      "then": {
+        "properties": { "missingFields": { "maxItems": 0 } }
+      },
+      "else": {
+        "properties": { "missingFields": { "minItems": 1 } }
+      }
     },
     "Metric": {
       "type": "object",
@@ -170,6 +211,8 @@
         "classification",
         "chargeBasis",
         "eligible",
+        "energyEligible",
+        "energyUnavailableReason",
         "methodId",
         "methodVersion",
         "calculatedAt",
@@ -209,6 +252,12 @@
         "eligible": {
           "type": "boolean"
         },
+        "energyEligible": {
+          "type": "boolean"
+        },
+        "energyUnavailableReason": {
+          "type": ["string", "null"]
+        },
         "methodId": {
           "type": "string"
         },
@@ -216,7 +265,7 @@
           "type": "string"
         },
         "calculatedAt": {
-          "type": "string",
+          "type": ["string", "null"],
           "format": "date-time"
         },
         "asOf": {
@@ -224,10 +273,10 @@
           "format": "date-time"
         },
         "period": {
-          "$ref": "#/$defs/Period"
+          "$ref": "#/$defs/OptionalPeriod"
         },
         "historyPeriod": {
-          "$ref": "#/$defs/Period"
+          "$ref": "#/$defs/OptionalPeriod"
         },
         "validDays": {
           "type": "integer",
@@ -250,7 +299,7 @@
           ]
         },
         "projectedPeriod": {
-          "$ref": "#/$defs/Period"
+          "$ref": "#/$defs/OptionalPeriod"
         },
         "isStale": {
           "type": "boolean"
@@ -258,7 +307,8 @@
         "maturity": {
           "enum": [
             "early",
-            "established"
+            "established",
+            null
           ]
         },
         "assumptions": {
@@ -282,6 +332,23 @@
       },
       "additionalProperties": true,
       "allOf": [
+        {
+          "if": {
+            "properties": { "energyEligible": { "const": true } }
+          },
+          "then": {
+            "properties": {
+              "projectedEnergyKwh": { "type": "number" },
+              "energyUnavailableReason": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "projectedEnergyKwh": { "type": "null" },
+              "energyUnavailableReason": { "type": "string" }
+            }
+          }
+        },
         {
           "if": {
             "properties": {
@@ -316,6 +383,9 @@
               },
               "unavailableReason": {
                 "type": "null"
+              },
+              "energyEligible": {
+                "const": true
               }
             }
           }
@@ -327,8 +397,10 @@
       "required": [
         "meta",
         "billingCycle",
+        "setupCompleteness",
         "currentPower",
         "todayEnergy",
+        "selectedPeriodEnergy",
         "contributions",
         "devices",
         "collector",
@@ -340,10 +412,16 @@
       ],
       "properties": {
         "meta": {
-          "$ref": "#/$defs/Meta"
+          "allOf": [
+            { "$ref": "#/$defs/Meta" },
+            { "required": ["settingsRevision"] }
+          ]
         },
         "billingCycle": {
-          "$ref": "#/$defs/Period"
+          "$ref": "#/$defs/OptionalPeriod"
+        },
+        "setupCompleteness": {
+          "$ref": "#/$defs/SetupCompleteness"
         },
         "currentPower": {
           "allOf": [
@@ -407,6 +485,31 @@
             }
           ]
         },
+        "selectedPeriodEnergy": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Metric"
+            },
+            {
+              "type": "object",
+              "required": [
+                "period",
+                "coverage"
+              ],
+              "properties": {
+                "unit": {
+                  "const": "kWh"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period"
+                },
+                "coverage": {
+                  "$ref": "#/$defs/Coverage"
+                }
+              }
+            }
+          ]
+        },
         "contributions": {
           "type": "object",
           "required": [
@@ -424,7 +527,25 @@
               "$ref": "#/$defs/Coverage"
             },
             "household": {
-              "$ref": "#/$defs/Metric"
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Metric"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "coverage"
+                  ],
+                  "properties": {
+                    "unit": {
+                      "const": "kWh"
+                    },
+                    "coverage": {
+                      "$ref": "#/$defs/Coverage"
+                    }
+                  }
+                }
+              ]
             },
             "appliances": {
               "type": "array",
@@ -660,7 +781,15 @@
           "additionalProperties": true
         },
         "cost": {
-          "$ref": "#/$defs/Metric"
+          "allOf": [
+            { "$ref": "#/$defs/Metric" },
+            {
+              "required": ["period"],
+              "properties": {
+                "period": { "$ref": "#/$defs/OptionalPeriod" }
+              }
+            }
+          ]
         },
         "forecast": {
           "$ref": "#/$defs/Forecast"
@@ -672,7 +801,9 @@
             "unit",
             "classification",
             "chargeBasis",
-            "period"
+            "period",
+            "unavailableReason",
+            "explanation"
           ],
           "properties": {
             "value": {
@@ -691,7 +822,13 @@
               "type": "string"
             },
             "period": {
-              "$ref": "#/$defs/Period"
+              "$ref": "#/$defs/OptionalPeriod"
+            },
+            "unavailableReason": {
+              "type": ["string", "null"]
+            },
+            "explanation": {
+              "type": ["string", "null"]
             }
           },
           "additionalProperties": true
@@ -702,6 +839,7 @@
             "state",
             "projectedDifference",
             "unit",
+            "period",
             "forecastCalculatedAt",
             "unavailableReason",
             "explanation"
@@ -713,6 +851,7 @@
                 "at_target",
                 "forecast_over",
                 "already_exceeded",
+                "pending",
                 "unavailable"
               ]
             },
@@ -724,6 +863,9 @@
             },
             "unit": {
               "const": "TRY"
+            },
+            "period": {
+              "$ref": "#/$defs/OptionalPeriod"
             },
             "forecastCalculatedAt": {
               "type": [

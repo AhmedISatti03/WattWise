@@ -4,7 +4,7 @@ WattWise is a household energy management application that helps users understan
 
 Developed for **CENG481 — The Agile Professional**, the project combines electricity-bill information, whole-household measurements, and selected appliance readings in one responsive web application. The initial pilot focuses on households in Türkiye, with further development planned for the Final Year Project.
 
-**Project status:** Local backend review increment: runnable health/database scaffold and opt-in synthetic mock API. Shared business contracts remain proposals for review. The frontend foundation is on `feature/task-9-frontend-foundation` in PR #13; the complete integrated demonstration is not yet implemented.
+**Project status:** Ahmed accepted the runnable local backend foundation in #15. The dashboard contract and synthetic mock updates are prepared for review in PR #29. The integrated demonstration will use stored synthetic readings and a coordinated assistant.
 
 **Supervisor:** Prof. Dr. Kaya Kuru  
 **Academic year:** 2026–2027
@@ -52,7 +52,7 @@ Smart plugs ──────→ Collection → Consumption records        │
 
 These are logical components. They do not require separate deployed services.
 
-The proposed backend stack and pending decisions are recorded in the [backend design proposal](docs/backend/design-proposal.md). Device models and deployment choices remain subject to validation.
+Ahmed approved Python with FastAPI and Pydantic, SQLAlchemy for persistence, and Alembic for migrations. PostgreSQL is the database target for the integrated demonstration. SQLite is available for local development and foundation checks. See the [review handoff](https://github.com/AhmedISatti03/WattWise/blob/6b3cae4/docs/backend/ahmed-review-response-v1.md) and [decision log](docs/backend/decision-log.md) for the approved direction and choices still open.
 
 ## Repository organization
 
@@ -196,7 +196,7 @@ Test data and recorded demonstration data will be clearly labelled. Detailed met
 
 ## Getting started
 
-For this local review increment, follow the [backend setup instructions](backend/README.md). They cover Python 3.12+, SQLite or optional PostgreSQL, explicit migrations, health checks, the synthetic mock API, and tests. These are scaffold instructions, not a claim that the complete household journey is ready.
+Follow the [backend setup instructions](backend/README.md) for Python 3.12+, the local SQLite and PostgreSQL profiles, migrations, health checks, and the opt-in mock API.
 
 Start with:
 
@@ -210,7 +210,7 @@ Component setup instructions will be maintained alongside the frontend, backend,
 
 ## Beyond the MVP
 
-Potential FYP extensions include native mobile applications, additional device models and bill formats, appliance control, advanced forecasting, and conversational energy guidance.
+Potential FYP extensions include native mobile applications, additional device models and bill formats, appliance control, and advanced forecasting.
 
 These remain outside the current MVP unless the team agrees and documents a scope change.
 

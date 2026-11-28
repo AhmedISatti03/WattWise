@@ -1,11 +1,14 @@
 # WattWise frontend–backend contract proposal
 
-**Version:** `0.1-draft` · **Prepared:** 27 November 2026  
-**Status:** Proposed for Ahmed and Miray's review; no shared-interface approval is claimed.  
-**Tasks:** #11, #14 (BE01); demo samples support #12.  
+**Version:** `0.1-draft` · **Updated:** 28 November 2026
+
+**Status:** Ahmed approved the dashboard direction and core design. Exact shared fields and proposed production behaviour remain open for review with Ahmed and Miray.
+
+**Tasks:** #11 and #12 review updates, #30 implementation decisions for #16–18.
+
 **Source handoffs:** [Backend v1.0](../handoffs/WattWise_Backend_Handoff_Umut_v1.0.md), [Frontend v1.0](../handoffs/WattWise_Frontend_Handoff_Miray_v1.0.md).
 
-This draft is a concrete review target, not a promise that the proposed production routes are implemented. The separately named development sample routes may be served now without making account, reading-storage, or calculation acceptance claims. Product and shared-interface decisions remain subject to the handoffs' review requirements.
+The [design review](https://github.com/AhmedISatti03/WattWise/blob/6b3cae4/docs/backend/ahmed-review-response-v1.md) records D01–D14 and their qualifications. The [#11 review](https://github.com/AhmedISatti03/WattWise/issues/11#issuecomment-7231387740) records the agreed dashboard behaviour. Section 7 lists the implemented mock routes.
 
 ## 1. Existing material and compatibility
 
@@ -13,7 +16,7 @@ Inspected `main` at `261fcb430297c3aa44ecb15e9ddc9db10a61f247`, frontend foundat
 
 Miray's `dashboardApi.ts` exports `getDashboard(scenario)` and returns four local JSON fixtures. Preserve its useful keys: `meta`, `billingCycle`, `currentPower`, `todayEnergy`, `contributions`, `devices`, and per-value `value`, `unit`, `classification`, `unavailableReason`. The foundation currently reads `sample.ts` directly; adopting a shared request module is Miray's #20 work. Do not claim the existing pages call this backend.
 
-Intentional proposed changes to review together:
+Agreed compatibility direction:
 
 - Normalize `todayEnergy.period.end` to **`endExclusive`**, matching other intervals. This is an explicit contract change, not a silent rename.
 - Add `contractVersion`, `contractStatus`, `sourceType`, `asOf`, `requestId`, and `scenario` to sample `meta`.
@@ -23,15 +26,15 @@ Intentional proposed changes to review together:
 
 ## 2. Common rules
 
-### Identifiers, ownership and authentication proposal
+### Identifiers, ownership and authentication
 
 Use opaque string identifiers (`userId`, `householdId`, `deviceId`, `collectorId`, `billId`). Real records use generated IDs, not names or IP addresses. The sample names in these documents are fixtures, not production IDs.
 
-Recommended browser transport: an opaque server-side session carried by an HttpOnly cookie, `SameSite=Lax`, secure cookies in HTTPS deployment, with explicit local-development configuration. A CSRF token is required on state-changing browser requests. Passwords are hashed using a maintained password-hashing library; never logged or returned. Session expiry, token issuance, cookie names and password policy require Ahmed's confirmation before implementation.
+Approved direction uses an opaque server-side session, an HttpOnly `SameSite=Lax` cookie and CSRF protection for browser mutations. The [#16 decision recommendations](../backend/decision-log.md) specify the proposed expiry, cookie configuration, CSRF, password and recovery rules for Ahmed to confirm.
 
 Collector requests instead use a revocable `Authorization: Bearer <collector-token>` credential bound to registered devices and one household. No model-provider key or collector secret is sent to the browser. Every household/device query and mutation checks server-side ownership. A requested household ID alone grants nothing. Return 404 for another account's object to avoid disclosing its existence. Missing/expired session returns 401.
 
-Propose a local frontend origin allowlist containing exactly configured trusted origins (initially `http://localhost:5173`), not a credentials-enabled wildcard. The integrated browser request module uses `credentials: "include"` if the session proposal is approved. Phone/laptop origin additions require coordinated CORS/cookie configuration.
+For the proposed browser integration, configure an exact trusted frontend origin and send `credentials: "include"`. Use the same hostname on both ends in HTTP loopback development, for example `localhost` on ports 5173 and 8100. Other origins require coordinated CORS and cookie configuration.
 
 ### Time, source and values
 
@@ -40,7 +43,7 @@ Propose a local frontend origin allowlist containing exactly configured trusted 
 - `meta.asOf` is the reading/calculation snapshot clock. `generatedAt` is response generation time; it is not proof that every measurement is fresh. Fixture timestamps are deliberately fixed. At HTTP delivery, `meta.requestId` is replaced with the actual request correlation UUID and matches the `X-Request-ID` header; the example request IDs are illustrative only.
 - A simulator must use one documented scenario clock for generation, aggregation and freshness; do not compare an October synthetic reading to the actual November wall clock and call it offline.
 - `sourceType` is `synthetic`, `physical_device`, or `historical_bill`; preserve provenance per measurement/evidence when a response draws from multiple sources. `sample: true` and `sampleLabel` are mandatory for every synthetic example.
-- Power is W; active energy is kWh; currency is TRY. JSON numbers remain unrounded for calculations, while UI energy/money display has two decimals. Decimal arithmetic is recommended for monetary calculations; rounding policy requires review.
+- Power is W, active energy is kWh and currency is TRY. Use precise decimal arithmetic for money and rates. Settings propose decimal strings. Dashboard monetary fixtures use JSON numbers for compatibility while production encoding and rounding remain open.
 - `value: null` means unavailable, with a non-null stable reason and human explanation. `0` is valid known zero, never an absent-data substitute. `[]` is a successful empty list, not an HTTP error. Pending calculations have a separate status, not an invented numeric estimate.
 - `coverage.status` is `complete`, `partial`, `none`, or `uncertain`; `gaps` identifies known missing intervals. A partial current day can have complete coverage of the elapsed portion. Completeness does not imply a complete calendar day.
 - Communication gaps and genuinely missing energy are separate. Supported cumulative-counter deltas may establish interval energy without establishing an hourly profile. Never invent chart detail through a gap.
@@ -86,7 +89,7 @@ All paths below start `/api/v1`. **Only health/configuration infrastructure and 
 |---|---|---|---|
 | `POST /accounts` | `{email,password}` | 201 `{user:{userId,email},householdId:null}`; does not silently sign in | #16 / BE03 |
 | `POST /sessions` | `{email,password}` | 200 `{user,householdId,expiresAt,csrfToken}` + session cookie | #16 |
-| `GET /session` | Session cookie | Current identity/session or 401 | #16 |
+| `GET /session` | Session cookie | 200 `{user,householdId,expiresAt,csrfToken}` or 401 | #16 |
 | `DELETE /session` | Cookie + CSRF | 204, revoke session and expire cookie | #16 |
 | `POST /households` | HouseholdCreate below | 201 Household; one household/account | #16 |
 | `GET /households/{id}` | Owned ID | Household | #16 |
@@ -96,8 +99,8 @@ All paths below start `/api/v1`. **Only health/configuration infrastructure and 
 | `POST /households/{id}/collectors` | `{name,sourceType}` | 201 registration + one-time token; token absent from later GETs | #17 |
 | `POST /collector/readings/batch` | Collector batch below | Per-event results after commit | #17 |
 | `GET /households/{id}/readings` | `deviceId,start,endExclusive,limit,cursor` | `{meta,items,nextCursor}` | #17 |
-| `GET /households/{id}/overview` | Explicit `start,endExclusive,resolution`; optional `deviceId` for detail | Dashboard groups; chart/contribution period explicit, billing groups separate | #11 / BE06 |
-| `GET /households/{id}/consumption` | Same filters | `{meta,period,trend,contributions,coverage}` | BE06 |
+| `GET /households/{id}/overview` | Explicit `start,endExclusive,resolution` | Dashboard with matched selected-period groups and separately labelled present, today and cycle groups | #11 / BE06 |
+| `GET /households/{id}/consumption` | Same period filters, optional `deviceId` for detail | `{meta,period,trend,selectedPeriodEnergy,contributions,coverage}` | BE06 |
 | `GET /households/{id}/costs` | `start,endExclusive` | Cost groups/charge basis and exclusions | BE07 |
 | `GET /households/{id}/forecast` | `cycleStart,cycleEndExclusive` | Forecast + same-basis budget position | BE07 |
 | `POST /households/{id}/bill-uploads` | Multipart `file`, idempotency key | 202 `{uploadId,status:"queued",extractionId}` | BE08 |
@@ -109,21 +112,58 @@ All paths below start `/api/v1`. **Only health/configuration infrastructure and 
 | `GET /households/{id}/insights/{insightId}` | Owned insight ID | Evidence and currentness | BE09 |
 | `POST /households/{id}/chat/messages` | `{message,clientMessageId}` + optional agreed conversation ID | Answer/evidence or typed assistant failure | BE10 + Ahmed |
 
-Settings mutations resolve actual owner from session. A future implementation should not add GET endpoints that accept arbitrary user IDs and return their data. Limits proposal: default page size 100, maximum 1000 readings, cursor `(observedAt,eventId)` with stable ordering; exact maximum and inclusive continuation behavior need confirmation. Consumption maximum period proposal 31 days for hourly buckets and 366 days for daily; invalid or reversed periods return 422. Chart selection never changes the configured bill cycle.
+Settings mutations resolve ownership from the session. Proposed reading pagination defaults to 100 and caps at 1,000. Use ascending `(observedAt,readingId)` and resume strictly after an opaque cursor bound to the same household/device/period. Proposed range caps are 31 days for hourly consumption and 366 days for daily consumption. Invalid or reversed periods return 422. Ahmed still needs to confirm the limits.
 
-### HouseholdCreate / Household
+### Household creation, setup and revision proposal
 
 ```json
 {
   "name":"Sample home",
   "timezone":"Europe/Istanbul",
   "billingCycle":{"start":"2026-10-18T00:00:00+03:00","endExclusive":"2026-11-17T00:00:00+03:00"},
-  "budget":{"value":800,"unit":"TRY","chargeBasis":"energy_only"},
-  "tariff":{"kind":"fictional_flat_energy","currency":"TRY","ratePerKwh":3,"effectiveFrom":"2026-10-18T00:00:00+03:00","effectiveUntilExclusive":null,"source":"synthetic","includedComponents":["energy"],"excludedComponents":["other_invoice_charges"]}
+  "budget":{"value":"800.00","unit":"TRY","chargeBasis":"energy_only"},
+  "tariff":{"kind":"fictional_flat_energy","currency":"TRY","ratePerKwh":"3.000000","effectiveFrom":"2026-10-18T00:00:00+03:00","effectiveUntilExclusive":null,"source":"synthetic","includedComponents":["energy"],"excludedComponents":["other_invoice_charges"]}
 }
 ```
 
-Response adds `householdId`, `ownerUserId` if required by the UI, `revision`, timestamps, and `setupCompleteness`. Budget/tariff can be null if incomplete setup is approved; dependent outputs then give explicit reasons. Propose positive budget, nonnegative rate, valid IANA timezone and ordered timezone-aware cycle boundaries. This synthetic tariff is **not a validated Turkish supplier tariff**. Real tariff type, effective-date editing and historical recalculation must be confirmed before #16 final acceptance.
+Incomplete setup is approved. Proposed field rules for #16:
+
+| Field | Save and validation rules |
+|---|---|
+| `name` | Required non-blank trimmed string on creation. |
+| `timezone` | Required IANA identifier on creation. `Europe/Istanbul` is the pilot choice. |
+| `billingCycle` | Optional. If supplied, both timestamps are required and must be ordered household-local calendar boundaries. An incomplete nested object gets 422. |
+| `budget` | Optional. The initial TRY energy-only target is a positive decimal string with exactly two fractional digits. |
+| `tariff` | Optional. The minimum profile is a labelled fictional flat TRY energy-only rate, a nonnegative decimal string with six fractional digits. Effective periods are ordered and half-open. The profile excludes other invoice charges. Real supplier and supported invoice components are tracked separately. |
+
+A successful create returns 201 with `householdId`, saved settings, `revision: 1`, `createdAt`, `updatedAt` and `setupCompleteness`. Omitted optional fields are returned as `null`. A PATCH includes the revision last read. Omission retains a field and explicit `null` clears an optional group. Validate a supplied group as a whole. Save the entire change atomically with the revision check, return the updated settings and revision on success, and use 409 `settings_revision_conflict` if another save won. The UI refreshes confirmed values and preserves the original draft for correction or resubmission. A rejected save leaves persisted settings unchanged.
+
+For example, `PATCH /households/sample-household` with `{"revision":2,"tariff":null,"budget":null}` keeps the existing profile and cycle, then returns revision 3 with these fields:
+
+```json
+{
+  "revision": 3,
+  "tariff": null,
+  "budget": null,
+  "setupCompleteness": {
+    "status": "incomplete",
+    "missingFields": [
+      {"field":"tariff","code":"tariff_missing","message":"Set an energy tariff to see cost estimates."},
+      {"field":"budget","code":"budget_missing","message":"Set a cycle budget to see budget comparisons."}
+    ]
+  }
+}
+```
+
+Use `status: "complete"` and an empty `missingFields` list when all groups are configured. Invalid supplied values return 422 with a field path such as `budget.value` and `must_be_positive`. See the [incomplete dashboard example](examples/v0.1/settings/incomplete-setup.json) for the successful read after this save.
+
+| Absent setting | Dependent results | Independently supported results |
+|---|---|---|
+| `billingCycle` | Cycle, accrued cost, cycle forecast and comparison lack a period and use `billing_cycle_missing`. | Present power, today's energy and selected-period consumption. A saved budget amount can still be edited. |
+| `tariff` | Cost and monetary forecast are null with `tariff_missing`. An otherwise configured budget comparison also needs that tariff. | Consumption, stored budget and an eligible energy forecast in kWh. |
+| `budget` | Target and comparisons are null with `budget_missing`. | Consumption, cost and eligible energy/monetary forecasts. |
+
+Return every missing field in `setupCompleteness`. For a single dependent result, show the first applicable cause in this order: missing billing cycle, missing budget where comparison requires it, missing tariff where money is needed, then the calculation-specific reason. Result-specific numeric zeros remain available. The example rate of TRY 3/kWh is fictional and labelled as such.
 
 ## 4. Collector batch and measurement proposal
 
@@ -133,7 +173,7 @@ Retain the collector plan's `/collector/readings/batch` path and its existing ev
 {
   "schema_version":1,
   "events":[{
-    "event_id":"event-001",
+    "event_id":"48262d61-2b10-4b67-9a24-030581467001",
     "collector_id":"registered-collector-id",
     "device_id":"registered-household-monitor-id",
     "measurement_scope":"household",
@@ -145,25 +185,28 @@ Retain the collector plan's `/collector/readings/batch` path and its existing ev
     "power_w":820,
     "energy_import_total_kwh":123.456,
     "counter_epoch":0,
-    "quality_flags":[]
+    "quality_flags":[],
+    "reset_evidence":null
   }]
 }
 ```
 
-Response proposal: 200 `{meta, results:[{eventId,status,code,message}]}`, `status` one of `accepted`, `already_stored`, `rejected`. ACK only after durable commit. Reject an invalid envelope with 400/422; for a valid batch validate individual events and commit accepted events transactionally with their outcomes. Full batch authorization failure returns 401/403 and accepts nothing. The partial-acceptance policy requires review before #17 implementation.
+Partial batch acceptance, safe retries and acknowledgement after commit are approved. The proposed response is 200 `{meta,results:[{eventIndex,eventId,status,code,message,receivedAt}]}` for any processed envelope, including all rejections. Results preserve input order with a zero-based `eventIndex`. `status` is `accepted`, `already_stored` or `rejected`. Accepted and identical retries return the original first receipt time and null code/message. A rejection has a code, null receipt time and a null event ID if the input did not have a valid ID. A malformed JSON body returns 400, an invalid envelope/count 422, a body over 1 MiB 413, and an invalid/disallowed collector credential 401/403. A transient storage failure returns 503 and the caller can retry the original payload. No event is acknowledged until the accepted writes commit.
 
 Important invariants:
 
-1. Authenticated credential determines collector/household/device membership. If `collector_id`, source or scope disagrees with registration, reject the event. Never use submitted household ownership as authorization.
+1. The authenticated credential determines collector, household and device membership. Reject the event if `collector_id`, source or scope disagrees with registration. `event_id` is a UUID. A simulated event includes its registered `sample_run_id`, and a physical one uses null. Use `device_measured_at` only for trusted device timestamps. With `timestamp_basis: "collector_observation"`, use `collected_at` and set `device_measured_at` to null.
 2. Unique key `(registered collector ID, event_id)`; exact same immutable payload returns `already_stored`. Same key/different payload returns `rejected` with `event_conflict`, never overwrites an accepted reading. Non-event mutations use `Idempotency-Key` scoped to owner + route + payload hash; same key/different input returns 409.
 3. Cumulative imported active energy is a counter, not energy for one poll. Adjacent valid counters in the same segment establish a delta over `[previous observed time,current observed time)`. Compare same intervals and units. First counter in a segment establishes a baseline; it is not consumed energy by itself.
-4. A lower counter must not create a negative delta. Explicit device/epoch change or a validated reset starts a new segment. Ambiguous reset/rollover is flagged and coverage withheld pending evidence. Counter epoch alone is not proof that arbitrary collector-supplied resets are correct.
-5. Late arrivals are stored immutably and re-evaluated in event-time order within a documented recalculation window. They must not move last-observed device freshness backward. Equal device/epoch/observed time with conflicting measurements is a recorded conflict, not two readings to add. Recalculation limits need confirmation.
-6. Reject non-finite/negative import counters, invalid units/types/timezone-naive times and unknown devices. Quarantine implausible readings rather than silently zeroing them. Exact physical plausibility/current limits are model-specific and remain pending, not guessed globally.
+4. The first energy observation starts epoch 0. A reset proposes the next epoch, the `counter_reset` flag and `reset_evidence` referencing the preceding accepted energy event. The counter must fall and the backend must corroborate the reset against the run's schedule or a physical adapter rule. The reset reading is a new baseline. Ambiguous reset or rollover leaves a coverage gap. Physical reset evidence needs an approved adapter rule.
+5. Proposed limits allow an observed time up to 120 seconds ahead of the applicable clock and a late observation up to 30 days behind that device/run's newest observation. Accepted late events replace affected deltas in event-time order and invalidate dependent buckets and comparisons. They do not move freshness backward. A different event at an already occupied device/run observation time is rejected.
+6. Power and energy are finite nonnegative numbers or null, with at least one available. When one is null, require the `partial_measurement` flag. Reject invalid units/types, timezone-naive times, unauthorized devices, and unsupported or export measurements. Per-model plausibility limits remain open for physical devices.
 7. Add authoritative `received_at` on first acceptance. Preserve original `collected_at`/device times on retries. Retrieval maps these to `receivedAt`, `observedAt` plus timestamp basis.
-8. A valid delta spanning a delivery gap can recover interval energy, but cannot manufacture hourly detail. Thresholds for stale power (collector plan suggests 30 s) and collector-unreachable (180 s) use the scenario clock in synthetic runs and require review.
+8. Sum supported same-epoch deltas. A delta wholly inside the requested interval can contribute to that interval total even across a delivery gap. If a delta straddles a requested period or bucket boundary without an observation to locate consumption on each side, mark the affected result unavailable or partial and preserve coverage evidence. Never interpolate an unsupported breakdown.
 
-Propose a 100-event batch default and a documented maximum of 1000, preserving event timestamps on replay. Larger historical imports split batches. Approval is needed for precise limits, late-arrival window and coverage allocation policy.
+Propose batches of up to 1,000 events and 1 MiB, with 100 events per chunk as the normal sender target. Preserve timestamps across retries. The [decision log](../backend/decision-log.md) covers event-field semantics, open choices and acceptance criteria. The [ingestion schema](ingestion-batch.schema.json) and [worked request/outcome sequences](examples/v0.1/ingestion/) accompany this production proposal.
+
+For #18, propose 60-second historical observations, 10-second live reporting and 60-second collector heartbeats. Device staleness after 30 seconds and collector unreachability after 180 seconds remain provisional. A seeded run proposes 1× or 10× replay, an explicit completed state with a frozen clock and an owner-confirmed reset restricted to that synthetic run. The simulator submits readings through the authenticated #17 route. See the [scenario definitions](../backend/scenario-definitions.md).
 
 ## 5. Consumption, device and forecast responses
 
@@ -171,23 +214,28 @@ Concrete versioned sample payloads are in [examples/v0.1](examples/v0.1/). The [
 
 | Example | HTTP for demo overview | Meaning |
 |---|---|---|
-| [normal](examples/v0.1/normal.json) | 200 | 820 W; 8.40 kWh partial current day; complete prior-day household 12 kWh; appliances 4+1+2 within total; remainder 5. |
+| [normal](examples/v0.1/normal.json) | 200 | 820 W and 8.40 kWh today. Seven complete days total 70 kWh, with appliances 24 + 7 + 13 kWh and 26 kWh other. The last complete day totals 12 kWh, with appliances 4 + 1 + 2 kWh and 5 kWh other. |
 | [empty](examples/v0.1/empty.json) | 200 | Null measurements with reasons, no trend buckets, no eligible forecast; known budget remains. |
 | [partial-data](examples/v0.1/partial-data.json) | 200 | Genuine current-day household energy gap; known recorded portion/cost remain labelled partial; full-cycle forecast withheld. |
 | [device-disconnected](examples/v0.1/device-disconnected.json) | 200 | Fridge interval unavailable and stale status; household values remain; remainder unavailable. |
-| [error](examples/v0.1/error.json) | 503 | Failed request. It does not claim that any physical device is offline. |
+| [error](examples/v0.1/error.json) | 503 | Request failure. Device state stays independent. |
+| [incomplete-setup](examples/v0.1/settings/incomplete-setup.json) | Contract sample | Consumption and the kWh projection remain usable with the tariff and budget absent. Monetary metrics and comparisons explain the missing settings. |
 
 `devices` response is a projection `{meta,devices,collector}` of the same scenario. `lastReadingAt` is observed time, `lastReceivedAt` first backend receipt. Collector `lastContactAt` and pending queue count each have their own observation time; cached queue count is not a live local fact during an internet outage.
 
-Trend buckets: `start`, `endExclusive`, `value` in kWh, `partialBucket`, `coverage`. No readings yields null bucket values or an explicitly empty series; valid zero remains zero. No linear filling of missing buckets is proposed. Calculate other consumption only when the same interval, same basis and sufficient household/appliance coverage support subtraction; negative remainder gets `invalid_remainder` with null, not zero. Missing a plug does not invalidate independently valid household energy. Contribution percentages need a positive valid denominator.
+The three selected-period groups use identical `start` and `endExclusive` values for a given request. `trend.period` describes the buckets, `selectedPeriodEnergy` is a kWh metric with a `period` and household `coverage`, and `contributions.period` applies to the household, appliances and remainder. The retained `contributions.household` metric agrees with `selectedPeriodEnergy`. The total may be supported by counter boundaries even if individual buckets lack coverage.
+
+`currentPower` is a present-time reading with observation/receipt times. `todayEnergy.period` covers today's household-local elapsed interval. `billingCycle` labels the cycle, `cost.period` covers the elapsed portion, and `forecast.period`, `budget.period` and `budgetPosition.period` refer to the full cycle. The selected-period request changes only its three consumption groups. Present-time and cycle results keep their own timestamps and periods.
+
+Each trend bucket has `start`, `endExclusive`, `value` in kWh, `partialBucket` and `coverage`. No readings yields null bucket values or an empty series, while known zero remains zero. Calculate other consumption only with matching intervals, the same basis and sufficient household and appliance coverage. A negative remainder yields null with `invalid_remainder`. Missing plug data leaves independently supported household energy available. Contribution percentages need a valid positive denominator.
 
 ### Initial cost and forecast proposal
 
 The normal sample has recorded cycle energy 108.40 kWh at 14:30 and energy-only cost `108.4×3=325.20 TRY`. Its forecast is deliberately **dated 00:00**, when 100 kWh was observed over ten complete days and 20 days remained. Seven complete recent days total 70 kWh: `100 + (70/7×20) = 300 kWh`; `300×3=900 TRY`. Same-cycle/basis target 800 gives forecast difference 100 TRY. These are synthetic arithmetic checks, not invoice forecasts or accuracy evidence.
 
-Forecast fields include `methodId`, `methodVersion`, `eligible`, `calculatedAt`, `asOf`, cycle/history/projected periods, `validDays`, `minimumValidDays`, observed/projected energy, assumptions, `maturity`, `isStale`, and unavailable reason. Budget position references the exact forecast calculation time. Future ML methods keep these fields and add method-specific metadata separately.
+Forecast fields include `methodId`, `methodVersion`, `eligible` for money, `energyEligible` for kWh, `calculatedAt`, `asOf`, cycle/history/projected periods, `validDays`, `minimumValidDays`, observed/projected energy, assumptions, `maturity`, `isStale`, and unavailable reason. `projectedEnergyKwh` is the projection for `projectedPeriod`, which covers the remainder of the cycle. A missing tariff leaves an otherwise supported `projectedEnergyKwh` available with `energyEligible: true` and null monetary `value`. If energy is ineligible, `energyUnavailableReason` explains why. With no cycle, cycle-dependent periods, `calculatedAt` and `maturity` are null. Budget position references the exact forecast calculation time when used.
 
-Propose retaining the existing minimum seven complete valid days and withholding full-cycle forecasts if elapsed-cycle energy is genuinely incomplete. No prediction from earlier unobserved cycle data is silently invented. Recompute after valid readings, tariff/budget edits or late-arrival coverage changes; pending/invalid results must suppress stale budget conclusions. Intraday extrapolation, freshness deadline, revision history and early-estimate exit conditions remain product decisions. The sample's accepted dated forecast is illustrative, not approval of a specific freshness deadline.
+The approved baseline uses the latest seven complete valid days in the cycle, reliable elapsed-cycle energy and daily recomputation at household midnight. Withhold full-cycle forecasts if elapsed-cycle energy is genuinely incomplete. After relevant settings edits or reading corrections, suppress outdated budget conclusions until matching results are available. Intraday treatment, forecast freshness and maturity thresholds remain open.
 
 ## 6. Bills, insights and assistant contracts to review
 
@@ -224,7 +272,8 @@ Proposed non-streaming chat response: `{messageId,conversationId:null|string,sta
 
 The scaffold may serve:
 
-- `GET /api/v1/demo/overview?scenario=normal` — complete fixture.
+- `GET /api/v1/demo/overview?scenario=normal` serves the fixed seven-day selection. The mock also serves a prebuilt one-day selection on the same snapshot.
+- To select, send both `start` and `endExclusive` as RFC3339 instants and optionally `resolution=day`. Supported periods in Europe/Istanbul are 21–28 October 2026 and 27–28 October 2026, both with midnight boundaries and exclusive ends. Encode a literal plus sign in an offset as `%2B`. Unsupported periods or resolutions return 422.
 - `GET /api/v1/demo/devices?scenario=normal` — matching device/collector projection.
 - Scenario enum: `normal`, `empty`, `partial-data`, `device-disconnected`, `error`.
 - Optional `delay_ms` integer 0–2000 models loading; it is transport behavior, not a new data state. Invalid scenario/delay yields documented validation failure.
@@ -246,17 +295,12 @@ The real integrated demo must generate data and submit it through ingestion, per
 | Insights | evidence/active state | Missing evidence, obsolete forecast, resolved insight |
 | Chat | Ahmed's authorized application functions + chat result | Insufficient data, unsupported request, provider failure, expired session |
 
-Frontend request modules must cancel or ignore superseded period requests. Cache keys include household, period, resolution and contract version; clear household caches at sign-out. Successful settings mutations refresh dependent outputs only after server confirmation; old forecasts cannot be combined with newly edited budgets without a revision/currency/period/basis check.
+Cancel superseded selections or discard their responses, including errors. Only the latest request for the active selection may update the chart, selected-period total and contributions, as one snapshot. Cache keys include household, period, resolution and contract version. Clear household caches at sign-out.
+
+Apply settings after a confirmed save. A proposed production dashboard includes `meta.settingsRevision` from the settings snapshot used for the result. Retain editable input after a failed save. For a dependent calculation awaiting refresh, return a null value with `recalculation_pending` and use `budgetPosition.state: "pending"` when applicable. Enable comparisons once revision, currency, period and charge basis agree. Independently usable metrics may remain available during refresh.
 
 ## 9. Review and unresolved choices
 
-Review together with the [backend proposal](../backend/design-proposal.md) and [decision log](../backend/decision-log.md) when available. Expected review questions:
+Ahmed's next confirmation is the #16 session/security configuration, proposed settings fields and revision behaviour, and fictional tariff profile. The #17 ingest limits, reset evidence and coverage rules and the #18 replay settings follow. Later tariff, forecast, bill, insight and assistant questions have owners and checkpoints in the [decision log](../backend/decision-log.md).
 
-1. Approve or revise session-cookie + CSRF transport, password/session policy, allowed origins and household creation behavior.
-2. Confirm camelCase response extension, the explicit `end` → `endExclusive` normalization, snake_case collector adapter and example schema.
-3. Confirm reading idempotency/partial batch outcomes, late-arrival window, reset evidence and coverage allocation.
-4. Confirm forecast baseline, intraday rule, freshness/maturity, tariff effective dates/rounding and budget charge basis.
-5. Select supplier samples/OCR, upload/retention rules, duplicate confirmation/correction behavior.
-6. Confirm assistant function and chat schema with Ahmed/Miray; conversation storage remains separate.
-
-The examples and paths are versioned proposals. No production endpoint or product rule becomes approved because it appears in a working mock. Record decisions and update both consumers before changing meanings.
+Miray's interface review covers exact fields and labels, switching both mock selections without a stale response replacing the current selection, the empty/disconnected/error scenarios, incomplete setup and save conflict/pending states. Contract acceptance and frontend scenario-switching verification are pending. [#11 review](https://github.com/AhmedISatti03/WattWise/issues/11#issuecomment-7231387740) · [#12 review](https://github.com/AhmedISatti03/WattWise/issues/12#issuecomment-7231523153)

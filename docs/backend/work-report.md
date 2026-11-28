@@ -6,6 +6,12 @@
 **Handoff:** backend v1.0, 26 November 2026; uploaded DOCX SHA-256 `3cdaadbe85cab2b4b3695838aa8d3ba55a8140616a1ccaa9a7091aba8790d0b0` matches the repository copy.  
 **Remote changes:** none. No push, remote branch creation, merge, PR/comment, issue edit or board transition was performed.
 
+## Follow-up on 28 November 2026
+
+Ahmed approved the D01–D14 core direction with qualifications and independently accepted the local Linux/SQLite foundation. Ahmed and Miray still need to confirm the remaining shared decisions and frontend fields/states. The [decision log](decision-log.md#review-summary) records the exact scope of approval, the prioritized #30 proposals and which implementation each confirmation unblocks. The verification below records the earlier local increment at its original scope. [PR review](https://github.com/AhmedISatti03/WattWise/pull/29#issuecomment-7230477489) · [Foundation review](https://github.com/AhmedISatti03/WattWise/issues/15#issuecomment-7231560010)
+
+The follow-up was verified locally on Windows with Python 3.12.14 and the pinned dependencies. All 37 backend tests passed and `pip check` found no broken requirements. The existing Starlette TestClient deprecation warning remains. A fresh SQLite database passed migration, readiness, and metadata persistence across separate Python processes. Both mock periods passed HTTP route tests through TestClient. Six dashboard examples and six proposed ingestion examples passed schema checks, including the expected rejection of the intentionally invalid mixed-batch event. This follow-up check used SQLite and in-process HTTP.
+
 ## What was checked
 
 Inspected all current main repository documents and handoff files, the foundation and consumption-dashboard feature branches, branch heads, all 27 non-PR issues and assignees, and PR #13's state/review/comment records. The binary wireframe artwork is supporting documentation, not application code. Word handoff body text was extracted and the uploaded file compared with the repository copy. Existing local files were preserved in their original checkout; implementation uses a separate Git worktree.

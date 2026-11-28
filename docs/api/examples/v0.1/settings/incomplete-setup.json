@@ -1,0 +1,370 @@
+{
+  "meta": {
+    "sample": true,
+    "sampleLabel": "Sample data — not real household measurements",
+    "householdId": "sample-household",
+    "timezone": "Europe/Istanbul",
+    "generatedAt": "2026-10-28T14:30:00+03:00",
+    "contractVersion": "0.1-draft",
+    "contractStatus": "proposed",
+    "sourceType": "synthetic",
+    "asOf": "2026-10-28T14:30:00+03:00",
+    "requestId": "sample-request-incomplete-setup",
+    "scenario": "incomplete-setup",
+    "settingsRevision": 3
+  },
+  "billingCycle": {
+    "start": "2026-10-18T00:00:00+03:00",
+    "endExclusive": "2026-11-17T00:00:00+03:00",
+    "lastIncludedDate": "2026-11-16"
+  },
+  "setupCompleteness": {
+    "status": "incomplete",
+    "missingFields": [
+      {
+        "field": "tariff",
+        "code": "tariff_missing",
+        "message": "Set an energy tariff to see cost estimates."
+      },
+      {
+        "field": "budget",
+        "code": "budget_missing",
+        "message": "Set a cycle budget to see budget comparisons."
+      }
+    ]
+  },
+  "currentPower": {
+    "value": 820,
+    "unit": "W",
+    "classification": "measured",
+    "observedAt": "2026-10-28T14:30:00+03:00",
+    "status": "ok",
+    "receivedAt": "2026-10-28T14:30:00+03:00",
+    "unavailableReason": null,
+    "explanation": null
+  },
+  "todayEnergy": {
+    "value": 8.4,
+    "unit": "kWh",
+    "classification": "measured",
+    "period": {
+      "start": "2026-10-28T00:00:00+03:00",
+      "endExclusive": "2026-10-28T14:30:00+03:00"
+    },
+    "partialDay": true,
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    },
+    "unavailableReason": null,
+    "explanation": null
+  },
+  "selectedPeriodEnergy": {
+    "value": 70,
+    "unit": "kWh",
+    "classification": "measured",
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    },
+    "unavailableReason": null,
+    "explanation": null,
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    }
+  },
+  "contributions": {
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "household": {
+      "value": 70,
+      "unit": "kWh",
+      "classification": "measured",
+      "coverage": {
+        "status": "complete",
+        "gaps": []
+      },
+      "unavailableReason": null,
+      "explanation": null
+    },
+    "appliances": [
+      {
+        "deviceId": "plug-ac",
+        "name": "AC",
+        "value": 24,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 34.285714285714285,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-fridge",
+        "name": "Fridge",
+        "value": 7,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 10,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      },
+      {
+        "deviceId": "plug-dishwasher",
+        "name": "Dishwasher",
+        "value": 13,
+        "unit": "kWh",
+        "classification": "measured",
+        "status": "ok",
+        "sharePercent": 18.571428571428573,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        },
+        "unavailableReason": null,
+        "explanation": null
+      }
+    ],
+    "other": {
+      "value": 26,
+      "unit": "kWh",
+      "classification": "calculated_remainder",
+      "unavailableReason": null,
+      "explanation": null,
+      "sharePercent": 37.142857142857146
+    },
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "household-monitor",
+      "name": "Whole-household monitor",
+      "scope": "household",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00",
+      "lastReceivedAt": "2026-10-28T14:30:00+03:00",
+      "sourceType": "synthetic",
+      "unavailableReason": null,
+      "explanation": null
+    },
+    {
+      "deviceId": "plug-ac",
+      "name": "AC",
+      "scope": "appliance",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00",
+      "lastReceivedAt": "2026-10-28T14:30:00+03:00",
+      "sourceType": "synthetic",
+      "unavailableReason": null,
+      "explanation": null
+    },
+    {
+      "deviceId": "plug-fridge",
+      "name": "Fridge",
+      "scope": "appliance",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00",
+      "lastReceivedAt": "2026-10-28T14:30:00+03:00",
+      "sourceType": "synthetic",
+      "unavailableReason": null,
+      "explanation": null
+    },
+    {
+      "deviceId": "plug-dishwasher",
+      "name": "Dishwasher",
+      "scope": "appliance",
+      "status": "reporting",
+      "lastReadingAt": "2026-10-28T14:30:00+03:00",
+      "lastReceivedAt": "2026-10-28T14:30:00+03:00",
+      "sourceType": "synthetic",
+      "unavailableReason": null,
+      "explanation": null
+    }
+  ],
+  "collector": {
+    "collectorId": "sample-collector",
+    "status": "reporting",
+    "lastContactAt": "2026-10-28T14:30:00+03:00",
+    "pendingCount": 0,
+    "pendingCountReportedAt": "2026-10-28T14:30:00+03:00",
+    "explanation": null
+  },
+  "trend": {
+    "scope": "household",
+    "unit": "kWh",
+    "resolution": "day",
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "buckets": [
+      {
+        "start": "2026-10-21T00:00:00+03:00",
+        "endExclusive": "2026-10-22T00:00:00+03:00",
+        "value": 10,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      },
+      {
+        "start": "2026-10-22T00:00:00+03:00",
+        "endExclusive": "2026-10-23T00:00:00+03:00",
+        "value": 12,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      },
+      {
+        "start": "2026-10-23T00:00:00+03:00",
+        "endExclusive": "2026-10-24T00:00:00+03:00",
+        "value": 9,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      },
+      {
+        "start": "2026-10-24T00:00:00+03:00",
+        "endExclusive": "2026-10-25T00:00:00+03:00",
+        "value": 11,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      },
+      {
+        "start": "2026-10-25T00:00:00+03:00",
+        "endExclusive": "2026-10-26T00:00:00+03:00",
+        "value": 10,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      },
+      {
+        "start": "2026-10-26T00:00:00+03:00",
+        "endExclusive": "2026-10-27T00:00:00+03:00",
+        "value": 6,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      },
+      {
+        "start": "2026-10-27T00:00:00+03:00",
+        "endExclusive": "2026-10-28T00:00:00+03:00",
+        "value": 12,
+        "partialBucket": false,
+        "coverage": {
+          "status": "complete",
+          "gaps": []
+        }
+      }
+    ]
+  },
+  "cost": {
+    "value": null,
+    "unit": "TRY",
+    "classification": "estimated_energy_cost",
+    "chargeBasis": "energy_only",
+    "tariffVersion": null,
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-10-28T14:30:00+03:00"
+    },
+    "observedEnergyKwh": 108.4,
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    },
+    "unavailableReason": "tariff_missing",
+    "explanation": "Set an energy tariff to see cost estimates."
+  },
+  "forecast": {
+    "value": null,
+    "unit": "TRY",
+    "classification": "forecast",
+    "chargeBasis": "energy_only",
+    "eligible": false,
+    "energyEligible": true,
+    "energyUnavailableReason": null,
+    "methodId": "recent-7-complete-days",
+    "methodVersion": "proposal-1",
+    "calculatedAt": "2026-10-28T00:00:00+03:00",
+    "asOf": "2026-10-28T00:00:00+03:00",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    },
+    "historyPeriod": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    },
+    "validDays": 7,
+    "minimumValidDays": 7,
+    "observedEnergyKwh": 100,
+    "projectedEnergyKwh": 200,
+    "projectedPeriod": {
+      "start": "2026-10-28T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00"
+    },
+    "isStale": false,
+    "maturity": "early",
+    "assumptions": [
+      "Recent mean usage continues.",
+      "Synthetic example."
+    ],
+    "unavailableReason": "tariff_missing",
+    "explanation": "The 200 kWh projection for the remainder of the cycle is available. Set a tariff for a monetary forecast."
+  },
+  "budget": {
+    "value": null,
+    "unit": "TRY",
+    "classification": "user_target",
+    "chargeBasis": "energy_only",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    },
+    "unavailableReason": "budget_missing",
+    "explanation": "Set a cycle budget to see budget comparisons."
+  },
+  "budgetPosition": {
+    "state": "unavailable",
+    "projectedDifference": null,
+    "unit": "TRY",
+    "forecastCalculatedAt": null,
+    "unavailableReason": "budget_missing",
+    "explanation": "Set a cycle budget and tariff to see budget comparisons.",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    }
+  }
+}

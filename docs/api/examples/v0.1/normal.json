@@ -10,12 +10,17 @@
     "sourceType": "synthetic",
     "asOf": "2026-10-28T14:30:00+03:00",
     "requestId": "sample-request-normal",
-    "scenario": "normal"
+    "scenario": "normal",
+    "settingsRevision": 2
   },
   "billingCycle": {
     "start": "2026-10-18T00:00:00+03:00",
     "endExclusive": "2026-11-17T00:00:00+03:00",
     "lastIncludedDate": "2026-11-16"
+  },
+  "setupCompleteness": {
+    "status": "complete",
+    "missingFields": []
   },
   "currentPower": {
     "value": 820,
@@ -43,13 +48,28 @@
     "unavailableReason": null,
     "explanation": null
   },
+  "selectedPeriodEnergy": {
+    "value": 70,
+    "unit": "kWh",
+    "classification": "measured",
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    },
+    "unavailableReason": null,
+    "explanation": null,
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    }
+  },
   "contributions": {
     "period": {
-      "start": "2026-10-27T00:00:00+03:00",
+      "start": "2026-10-21T00:00:00+03:00",
       "endExclusive": "2026-10-28T00:00:00+03:00"
     },
     "household": {
-      "value": 12.0,
+      "value": 70,
       "unit": "kWh",
       "classification": "measured",
       "coverage": {
@@ -63,11 +83,11 @@
       {
         "deviceId": "plug-ac",
         "name": "AC",
-        "value": 4.0,
+        "value": 24,
         "unit": "kWh",
         "classification": "measured",
         "status": "ok",
-        "sharePercent": 33.33333333333333,
+        "sharePercent": 34.285714285714285,
         "coverage": {
           "status": "complete",
           "gaps": []
@@ -78,11 +98,11 @@
       {
         "deviceId": "plug-fridge",
         "name": "Fridge",
-        "value": 1.0,
+        "value": 7,
         "unit": "kWh",
         "classification": "measured",
         "status": "ok",
-        "sharePercent": 8.333333333333332,
+        "sharePercent": 10,
         "coverage": {
           "status": "complete",
           "gaps": []
@@ -93,11 +113,11 @@
       {
         "deviceId": "plug-dishwasher",
         "name": "Dishwasher",
-        "value": 2.0,
+        "value": 13,
         "unit": "kWh",
         "classification": "measured",
         "status": "ok",
-        "sharePercent": 16.666666666666664,
+        "sharePercent": 18.571428571428573,
         "coverage": {
           "status": "complete",
           "gaps": []
@@ -107,12 +127,12 @@
       }
     ],
     "other": {
-      "value": 5.0,
+      "value": 26,
       "unit": "kWh",
       "classification": "calculated_remainder",
       "unavailableReason": null,
       "explanation": null,
-      "sharePercent": 41.66666666666667
+      "sharePercent": 37.142857142857146
     },
     "coverage": {
       "status": "complete",
@@ -278,6 +298,8 @@
     "classification": "forecast",
     "chargeBasis": "energy_only",
     "eligible": true,
+    "energyEligible": true,
+    "energyUnavailableReason": null,
     "methodId": "recent-7-complete-days",
     "methodVersion": "proposal-1",
     "calculatedAt": "2026-10-28T00:00:00+03:00",
@@ -318,7 +340,9 @@
       "start": "2026-10-18T00:00:00+03:00",
       "endExclusive": "2026-11-17T00:00:00+03:00",
       "lastIncludedDate": "2026-11-16"
-    }
+    },
+    "unavailableReason": null,
+    "explanation": null
   },
   "budgetPosition": {
     "state": "forecast_over",
@@ -326,6 +350,11 @@
     "unit": "TRY",
     "forecastCalculatedAt": "2026-10-28T00:00:00+03:00",
     "unavailableReason": null,
-    "explanation": "Projected difference uses the dated, same-cycle, same-basis forecast. Proposed freshness acceptance still requires review."
+    "explanation": "Projected difference uses the dated, same-cycle, same-basis forecast. Proposed freshness acceptance still requires review.",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    }
   }
 }

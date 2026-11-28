@@ -10,12 +10,17 @@
     "sourceType": "synthetic",
     "asOf": "2026-10-28T14:30:00+03:00",
     "requestId": "sample-request-partial",
-    "scenario": "partial-data"
+    "scenario": "partial-data",
+    "settingsRevision": 2
   },
   "billingCycle": {
     "start": "2026-10-18T00:00:00+03:00",
     "endExclusive": "2026-11-17T00:00:00+03:00",
     "lastIncludedDate": "2026-11-16"
+  },
+  "setupCompleteness": {
+    "status": "complete",
+    "missingFields": []
   },
   "currentPower": {
     "value": 820,
@@ -48,13 +53,28 @@
     "unavailableReason": null,
     "explanation": "Recorded portion only; two hours of household energy are genuinely missing."
   },
+  "selectedPeriodEnergy": {
+    "value": 70,
+    "unit": "kWh",
+    "classification": "measured",
+    "coverage": {
+      "status": "complete",
+      "gaps": []
+    },
+    "unavailableReason": null,
+    "explanation": null,
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    }
+  },
   "contributions": {
     "period": {
-      "start": "2026-10-27T00:00:00+03:00",
+      "start": "2026-10-21T00:00:00+03:00",
       "endExclusive": "2026-10-28T00:00:00+03:00"
     },
     "household": {
-      "value": 12.0,
+      "value": 70,
       "unit": "kWh",
       "classification": "measured",
       "coverage": {
@@ -68,11 +88,11 @@
       {
         "deviceId": "plug-ac",
         "name": "AC",
-        "value": 4.0,
+        "value": 24,
         "unit": "kWh",
         "classification": "measured",
         "status": "ok",
-        "sharePercent": 33.33333333333333,
+        "sharePercent": 34.285714285714285,
         "coverage": {
           "status": "complete",
           "gaps": []
@@ -83,11 +103,11 @@
       {
         "deviceId": "plug-fridge",
         "name": "Fridge",
-        "value": 1.0,
+        "value": 7,
         "unit": "kWh",
         "classification": "measured",
         "status": "ok",
-        "sharePercent": 8.333333333333332,
+        "sharePercent": 10,
         "coverage": {
           "status": "complete",
           "gaps": []
@@ -98,11 +118,11 @@
       {
         "deviceId": "plug-dishwasher",
         "name": "Dishwasher",
-        "value": 2.0,
+        "value": 13,
         "unit": "kWh",
         "classification": "measured",
         "status": "ok",
-        "sharePercent": 16.666666666666664,
+        "sharePercent": 18.571428571428573,
         "coverage": {
           "status": "complete",
           "gaps": []
@@ -112,12 +132,12 @@
       }
     ],
     "other": {
-      "value": 5.0,
+      "value": 26,
       "unit": "kWh",
       "classification": "calculated_remainder",
       "unavailableReason": null,
       "explanation": null,
-      "sharePercent": 41.66666666666667
+      "sharePercent": 37.142857142857146
     },
     "coverage": {
       "status": "complete",
@@ -288,6 +308,8 @@
     "classification": "forecast",
     "chargeBasis": "energy_only",
     "eligible": false,
+    "energyEligible": false,
+    "energyUnavailableReason": "incomplete_cycle",
     "methodId": "recent-7-complete-days",
     "methodVersion": "proposal-1",
     "calculatedAt": "2026-10-28T00:00:00+03:00",
@@ -328,7 +350,9 @@
       "start": "2026-10-18T00:00:00+03:00",
       "endExclusive": "2026-11-17T00:00:00+03:00",
       "lastIncludedDate": "2026-11-16"
-    }
+    },
+    "unavailableReason": null,
+    "explanation": null
   },
   "budgetPosition": {
     "state": "unavailable",
@@ -336,6 +360,11 @@
     "unit": "TRY",
     "forecastCalculatedAt": "2026-10-28T00:00:00+03:00",
     "unavailableReason": "forecast_unavailable",
-    "explanation": "Incomplete elapsed-cycle energy suppresses forecast-based budget conclusions."
+    "explanation": "Incomplete elapsed-cycle energy suppresses forecast-based budget conclusions.",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    }
   }
 }

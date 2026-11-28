@@ -1,0 +1,47 @@
+{
+  "sample": true,
+  "sampleLabel": "Fictional WattWise ingestion scenario",
+  "request": {
+    "schema_version": 1,
+    "events": [
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467007",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T09:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": 101,
+        "counter_epoch": 0,
+        "quality_flags": [],
+        "reset_evidence": null
+      }
+    ]
+  },
+  "expectedHttpStatus": 200,
+  "response": {
+    "meta": {
+      "contractVersion": "0.1-draft",
+      "requestId": "eb17203f-b546-4c99-a23e-c2d17c5a5f06"
+    },
+    "results": [
+      {
+        "eventIndex": 0,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467007",
+        "status": "accepted",
+        "code": null,
+        "message": null,
+        "receivedAt": "2026-11-28T09:05:00Z"
+      }
+    ]
+  },
+  "expectedEffects": [
+    "The delayed 09:00Z observation fits the accepted neighbors of epoch 0.",
+    "In place of the former 08:00–10:00Z delta, each hour now has a supported 1 kWh delta; their sum stays 2 kWh.",
+    "Invalidate affected derived results. The last observed time remains 13:00Z."
+  ]
+}

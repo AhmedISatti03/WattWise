@@ -10,12 +10,17 @@
     "sourceType": "synthetic",
     "asOf": "2026-10-28T14:30:00+03:00",
     "requestId": "sample-request-empty",
-    "scenario": "empty"
+    "scenario": "empty",
+    "settingsRevision": 2
   },
   "billingCycle": {
     "start": "2026-10-18T00:00:00+03:00",
     "endExclusive": "2026-11-17T00:00:00+03:00",
     "lastIncludedDate": "2026-11-16"
+  },
+  "setupCompleteness": {
+    "status": "complete",
+    "missingFields": []
   },
   "currentPower": {
     "value": null,
@@ -43,9 +48,24 @@
     "unavailableReason": "no_readings",
     "explanation": "No readings are available in the selected interval."
   },
+  "selectedPeriodEnergy": {
+    "value": null,
+    "unit": "kWh",
+    "classification": "unavailable",
+    "coverage": {
+      "status": "none",
+      "gaps": []
+    },
+    "unavailableReason": "no_readings",
+    "explanation": "No readings yet.",
+    "period": {
+      "start": "2026-10-21T00:00:00+03:00",
+      "endExclusive": "2026-10-28T00:00:00+03:00"
+    }
+  },
   "contributions": {
     "period": {
-      "start": "2026-10-27T00:00:00+03:00",
+      "start": "2026-10-21T00:00:00+03:00",
       "endExclusive": "2026-10-28T00:00:00+03:00"
     },
     "household": {
@@ -161,6 +181,8 @@
     "classification": "forecast",
     "chargeBasis": "energy_only",
     "eligible": false,
+    "energyEligible": false,
+    "energyUnavailableReason": "insufficient_valid_days",
     "methodId": "recent-7-complete-days",
     "methodVersion": "proposal-1",
     "calculatedAt": "2026-10-28T00:00:00+03:00",
@@ -201,7 +223,9 @@
       "start": "2026-10-18T00:00:00+03:00",
       "endExclusive": "2026-11-17T00:00:00+03:00",
       "lastIncludedDate": "2026-11-16"
-    }
+    },
+    "unavailableReason": null,
+    "explanation": null
   },
   "budgetPosition": {
     "state": "unavailable",
@@ -209,6 +233,11 @@
     "unit": "TRY",
     "forecastCalculatedAt": "2026-10-28T00:00:00+03:00",
     "unavailableReason": "forecast_unavailable",
-    "explanation": "A budget exists, but an eligible forecast does not."
+    "explanation": "A budget exists, but an eligible forecast does not.",
+    "period": {
+      "start": "2026-10-18T00:00:00+03:00",
+      "endExclusive": "2026-11-17T00:00:00+03:00",
+      "lastIncludedDate": "2026-11-16"
+    }
   }
 }

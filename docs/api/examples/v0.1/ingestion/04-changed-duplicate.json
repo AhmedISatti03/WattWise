@@ -1,0 +1,46 @@
+{
+  "sample": true,
+  "sampleLabel": "Fictional WattWise ingestion scenario",
+  "request": {
+    "schema_version": 1,
+    "events": [
+      {
+        "event_id": "48262d61-2b10-4b67-9a24-030581467002",
+        "collector_id": "sample-ingestion-collector",
+        "device_id": "sample-ingestion-monitor",
+        "measurement_scope": "household",
+        "source_kind": "simulated",
+        "sample_run_id": "seed-42-ingestion",
+        "device_measured_at": null,
+        "collected_at": "2026-10-28T10:00:00Z",
+        "timestamp_basis": "collector_observation",
+        "power_w": 820,
+        "energy_import_total_kwh": 102.5,
+        "counter_epoch": 0,
+        "quality_flags": [],
+        "reset_evidence": null
+      }
+    ]
+  },
+  "expectedHttpStatus": 200,
+  "response": {
+    "meta": {
+      "contractVersion": "0.1-draft",
+      "requestId": "eb17203f-b546-4c99-a23e-c2d17c5a5f04"
+    },
+    "results": [
+      {
+        "eventIndex": 0,
+        "eventId": "48262d61-2b10-4b67-9a24-030581467002",
+        "status": "rejected",
+        "code": "event_conflict",
+        "message": "This event ID is already stored with a different payload.",
+        "receivedAt": null
+      }
+    ]
+  },
+  "expectedEffects": [
+    "The 10:00Z record still stores 102 kWh.",
+    "No new reading or consumption is added."
+  ]
+}

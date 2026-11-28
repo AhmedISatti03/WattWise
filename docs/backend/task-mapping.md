@@ -1,17 +1,18 @@
 # Backend task and handoff mapping
 
-**Snapshot:** 27 November 2026 · **Handoff:** backend v1.0 · **Status:** proposed mapping; no GitHub issue/board state changed.
+**Snapshot:** 28 November 2026 · **Handoff:** backend v1.0 and Ahmed’s D01–D14 review
 
-GitHub assignee `GlobalUmut` is Umut. Current open assigned work is #4, #11, #12 and #14–#18. Closed assigned groundwork is #2, #5, #8 and #9. The assistant/ML issues #24–#28 belong to Ahmed; frontend #6 and #19–#23 belong to Miray. The old temporary frontend coverage in chat is not used to override this current assignment/handoff.
+GitHub assignee `GlobalUmut` is Umut. The assigned backend work covers #4, #11, #12, #14–#18 and #30. Closed assigned groundwork is #2, #5, #8 and #9. Ahmed owns the assistant and ML issues #24–#28, and Miray owns frontend #6 and #19–#23.
 
 ## Active queue
 
 | GitHub issue | Handoff mapping | Existing evidence / next action | Completion boundary |
 |---|---|---|---|
-| #14 Propose backend design and first API contract | BE01 | This proposal, decision log, repo inventory, shared contract and examples. Review rules with Ahmed and fields with Miray. | Design can be prepared; agreement remains pending. |
-| #11 First frontend–backend data contract | BE01 cross-cutting | `docs/api/frontend-contract.md`, machine-readable examples; preserve branch fixture naming deliberately. | Review field names/meaning and normal/failure payloads; do not call draft approved. |
-| #12 Mock API | FE02 support, not substitute for BE04–06 | Runnable explicitly labelled sample responses and scenario selection. Reuse common contract examples. | A frontend can request fixtures; this does not demonstrate persistent ingestion or authoritative calculations. |
-| #15 Runnable backend/database | BE02 | Independent startup/configuration, migrations and health scaffold can proceed; target database/stack confirmation required. | Clean setup, migration and health evidence, plus independent teammate run. |
+| #30 Finalize implementation decisions | BE01 follow-up | [Decision log](decision-log.md) records Ahmed’s approvals and prioritized proposals. [Scenario definitions](scenario-definitions.md) and shared examples give expected outcomes. | Ahmed confirms choices required by the next increment and Miray reviews relevant shared fields and states. |
+| #14 Propose backend design and first API contract | BE01 | Ahmed approved the core design direction with qualifications. | Record approval evidence and track exact open behavior under #30. |
+| #11 First frontend–backend data contract | BE01 cross-cutting | Ahmed reviewed dashboard behavior, requested aligned selected-period outputs and concrete incomplete setup. | Confirm remaining choices and complete Miray’s review of fields, states and payloads. |
+| #12 Mock API | FE02 support | Ahmed independently verified pinned installation, 24 tests and all five mock scenarios at the reviewed commit. | Align fixtures with #11 and verify frontend scenario switching. |
+| #15 Runnable backend/database | BE02 | Ahmed accepted the local Linux/SQLite foundation following independent startup, migration, health, restart and mock gating checks. | PostgreSQL is the approved integrated demo target. Independent PostgreSQL, Windows and account persistence validation have their own checkpoints. |
 | #16 Accounts and persistent household settings | BE03 | Depends on BE02 and agreed auth/settings/period/tariff contract. | Persist/reload/restart, invalid inputs, two-user separation, frontend connection. |
 | #17 Device registration and ingestion | BE04 | Depends on BE03 and approved reading/counter/idempotency semantics. | Device ownership, unchanged retry, conflict, late arrival/reset, retrieval and failures through API. |
 | #18 Synthetic household generation/replay | BE05 | Scenario plan in this package; implement against BE04 API after rules agree. | Real HTTP ingestion, persistent events and deterministic replay outcomes; static dashboard JSON alone cannot complete this. |
